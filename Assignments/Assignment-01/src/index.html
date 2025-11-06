@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pinboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Fonts (Roboto, Material Icons) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/index.css">
+
+    <!-- Main JavaScript (ES Module) -->
+    <script type="module" src="index.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <!-- Title -->
+            <h1>Pinboard</h1>
+            <!-- Search Input -->
+            <input id="search-input" type="search" spellcheck="false" autocapitalize="false" placeholder="Search pins...">
+            <button id="search-button" class="icon-button">
+                <span class="material-icons search-icon">search</span>
+                <span class="material-icons close-icon">close</span>
+            </button>
+        </header>
+        <main>
+            <!------------------------------------------------------------------------------------------------------------>
+
+            <!-- Add the class "active" to the section to display it -->
+
+            <!------------------------------------------------------------------------------------------------------------>
+            
+            <!--
+                Pins Section
+                This section displays the pins in a masonry layout. When on the home view, all pins are shown.
+                When a search is performed, only the matching pins are displayed.
+            -->
+            <section id="pins-section">
+                <ul id="masonry-list">
+                    <!-- Pins will be dynamically added here -->
+                </ul>
+            </section>
+
+            <!-- Pin Template -->
+            <!-- This template is used to create new pins in the masonry layout -->
+            <template id="pin-template">
+                <li class="masonry-pin">
+                    <!-- Internal link to edit the pin -->
+                    <a class="masonry-pin-link" href="#"></a>
+                    <!-- Pin content -->
+                    <div class="masonry-pin-content">
+                        <span class="material-icons masonry-pin-link-icon">link</span>
+                        <img class="masonry-pin-image" src="https://placecats.com/200/300" alt="Pin image">
+                        <h3 class="masonry-pin-title"></h3>
+                        <p class="masonry-pin-description"></p>
+                    </div>
+                    <!-- Pin footer -->
+                    <!-- Contains the date of the pin and some action buttons -->
+                    <footer class="masonry-pin-footer">
+                        <span class="masonry-pin-date"></span>
+                        <div class="masonry-pin-actions">
+                            <button class="masonry-pin-copy-button icon-button" type="button">
+                                <span class="material-icons">content_copy</span>
+                                <span>Copy</span>
+                            </button>
+                            <div class="button-tooltip-container">
+                                <button class="masonry-pin-more-button icon-button" type="button">
+                                    <span class="material-icons">more_horiz</span>
+                                    <span>More options</span>
+                                </button>
+                                <div class="masonry-pin-more-options button-tooltip-list hidden">
+                                    <a class="button masonry-pin-edit-link" href="#">
+                                        <span class="material-icons">edit</span>
+                                        <span>Edit</span>
+                                    </a>
+                                    <button class="masonry-pin-delete-button" type="button">
+                                        <span class="material-icons">delete</span>
+                                        <span>Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                </li>
+            </template>
+
+            <!------------------------------------------------------------------------------------------------------------>
+
+            <!--
+                Create Section
+                This section is a form that allows users to create a new pin or to edit existing one.
+            -->
+
+            <section id="create-section">
+                <h2 id="create-section-title">Create New Pin</h2>
+                <form id="create-pin-form">
+                    <!-- Image Upload -->
+                    <button id="pin-form-image-upload" type="button">
+                        <div>
+                            <span class="material-icons">upload</span>
+                            <label for="pin-image" class="placeholder">Choose an image to upload</label>
+                        </div>
+                        <input type="file" id="pin-image" name="pin-image" accept="image/*">
+                        <p>We recommend using jpg files of high quality of less than 20MB.</p>
+                        <img id="image-preview" src="https://placecats.com/200/300" alt="Uploaded image preview">
+                    </button>
+
+                    <!-- Pin information inputs -->
+
+                    <!-- Pin color selection -->
+                    <div id="pin-form-details">
+                        <fieldset>
+                            <legend>Choose a color</legend>
+                            <div>
+                                <label for="green">Green</label>
+                                <input type="radio" id="green" name="pin-color" value="green">
+                                <label for="yellow">Yellow</label>
+                                <input type="radio" id="yellow" name="pin-color" value="yellow">
+                                <label for="orange">Orange</label>
+                                <input type="radio" id="orange" name="pin-color" value="orange">
+                                <label for="red">Red</label>   
+                                <input type="radio" id="red" name="pin-color" value="red">
+                                <label for="purple">Purple</label>
+                                <input type="radio" id="purple" name="pin-color" value="purple">
+                                <label for="blue">Blue</label>
+                                <input type="radio" id="blue" name="pin-color" value="blue">
+                                <label for="pink">Pink</label>
+                                <input type="radio" id="pink" name="pin-color" value="pink">
+                                <label for="white">White</label>
+                                <input type="radio" id="white" name="pin-color" value="white" checked>  
+                                <label for="gray">Gray</label>
+                                <input type="radio" id="gray" name="pin-color" value="gray">
+                                <label for="black">Black</label>
+                                <input type="radio" id="black" name="pin-color" value="black">
+                            </div>
+                        </fieldset>
+
+                        <div>
+                            <label for="pin-title" class="required">Title</label>
+                            <input type="text" id="pin-title" name="pin-title" placeholder="Add a title" required>
+                        </div>
+
+                        <div>
+                            <label for="pin-description">Description</label>
+                            <textarea id="pin-description" name="pin-description" placeholder="Add a detail description"></textarea>
+                        </div>
+
+                        <div>
+                            <label for="pin-link">Link</label>
+                            <input type="url" id="pin-link" name="pin-link" placeholder="Add a link">
+                        </div>
+
+                        <button id="pin-form-submit-btn" class="primary" type="button">Create Pin</button>
+                    </div>
+                </form>
+            </section>
+
+            <!------------------------------------------------------------------------------------------------------------>
+
+            <!--
+                Pin Display Section
+            -->
+
+            <section id="pin-section">
+                <button id="display-pin-back-button" class="icon-button xxl-button">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <div id="display-pin">
+                    <aside id="display-pin-actions">
+                        <button id="display-pin-copy-button" class="icon-button xl-button">
+                            <span class="material-icons">content_copy</span>
+                            <span>Copy</span>
+                        </button>
+                        <button id="display-pin-img-fullpage-download"  class="icon-button xl-button">
+                            <span class="material-icons">download</span>
+                            <span>Download</span>
+                        </button>
+                        <div class="button-tooltip-container">
+                            <button id="display-pin-more-options-button" class="icon-button xl-button">
+                                <span class="material-icons">more_horiz</span>
+                                <span>More</span>
+                            </button>
+                            <!-- More options -->
+                            <div id="display-pin-more-options" class="button hidden button-tooltip-list">
+                                <a id="display-pin-edit-link">
+                                    <span class="material-icons">edit</span>
+                                    <span>Edit</span>
+                                </a>
+                                <button id="display-pin-delete-button">
+                                    <span class="material-icons">delete</span>
+                                    <span>Delete</span>
+                                </button>
+                            </div>
+                        </div>
+                    </aside>
+                    <div id="display-pin-img-container">
+                        <img id="display-pin-image" src="https://placecats.com/400/600" alt="Pin image">
+                        <div id="display-pin-img-fullpage-controls">
+                            <button id="display-pin-img-fullpage-open" class="icon-button xl-button">
+                                <span class="material-icons">open_in_full</span>
+                                <span>Open Fullscreen</span>
+                            </button>
+                            <button id="display-pin-img-fullpage-close" class="icon-button xl-button hidden">
+                                <span class="material-icons">close</span>
+                                <span>Close Fullscreen</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="display-pin-details">
+                        <div id="display-pin-title-link-container">
+                            <h2 id="display-pin-title">Pin Title</h2>
+                            <a href="#" id="display-pin-link" target="_blank" class="button l-button">Visit Site</a>
+                        </div>
+                        <p id="display-pin-description">Pin Description</p>
+                        <div id="display-pin-created-at-container">
+                            <span class="footnote">Created At:</span>
+                            <span id="display-pin-created-at" class="footnote">Pin Date</span>
+                        </div>
+                        <div id="display-pin-updated-at-container">
+                            <span class="footnote">Updated At:</span>
+                            <span id="display-pin-updated-at" class="footnote">Pin Updated Date</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!------------------------------------------------------------------------------------------------------------>
+
+        </main>
+
+        <!-- Dialog use to display overlay message to the user -->
+        <dialog class="">Dialog</dialog>
+    </div>
+
+    <!-- Navbar -->
+    <nav>
+        <a href="#home">
+            <span class="material-icons-outlined">home</span>
+            <span class="material-icons">home</span>
+            <span>Home</span>
+        </a>
+        <a href="#create">
+            <span class="material-icons-outlined">add_box</span>
+            <span class="material-icons">add_box</span>
+            <span>Create</span>
+        </a>
+    </nav>
+</body>
+</html>

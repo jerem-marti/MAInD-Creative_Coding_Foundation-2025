@@ -1,0 +1,231 @@
+/* --------------------------------------------------------------------------------- */
+/* html body */
+
+/* Make sure the html and body take the full height of the viewport */
+html, body {
+  height: 100dvh;
+}
+
+body {
+  display: flex;
+  flex-direction: row-reverse;
+  background-color: var(--bg-color);
+}
+
+body .container {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------------- */
+/* nav */
+
+nav {
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1rem;
+  margin: 0;
+  gap: 1rem;
+  background: var(--primary-color);
+  max-width: 1440px;
+  align-self: flex-start;
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+}
+
+nav a {
+  text-decoration: none;
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: var(--default-transition);
+}
+
+nav a * {
+  text-align: center;
+  transition: var(--default-transition);
+}   
+
+nav a:hover {
+  background-color: var(--primary-color-dark);
+}
+
+nav a .material-icons {
+  font-size: 2.5rem;
+  display: none;
+}
+
+nav a.active span:last-child{
+  font-weight: bold;
+}
+
+nav a.active .material-icons {
+  font-size: 2.5rem;
+  display: inline;
+}
+
+nav a .material-icons-outlined {
+  font-size: 2.5rem;
+}
+
+nav a.active .material-icons-outlined {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------------- */
+/* header */
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  background: linear-gradient(0deg, var(--bg-color) 0%, var(--primary-color-dark) 150%);
+}
+
+h1 {
+    visibility: hidden;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    margin-right: -1px;
+    margin-top: -1px;
+}
+
+header #search-input {
+  flex: 1;
+  max-width: 1440px;
+  padding: 1rem;
+  margin: 2rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  color: var(--secondary-color);
+}
+
+/* clears the ‘X’ from Internet Explorer */
+header #search-input::-ms-clear { display: none; width : 0; height: 0; }
+header #search-input::-ms-reveal { display: none; width : 0; height: 0; }
+/* clears the ‘X’ from Chrome */
+header #search-input::-webkit-search-decoration,
+header #search-input::-webkit-search-cancel-button,
+header #search-input::-webkit-search-results-button,
+header #search-input::-webkit-search-results-decoration { display: none; }
+
+header #search-button {
+  position: absolute;
+  /* right: calc(var(--border-radius) + 2rem); */
+  right: max(calc((100% - 1440px)/2 + var(--border-radius)), calc(var(--border-radius) + 2rem));
+  bottom: 50%;
+  transform: translateY(50%);
+  cursor: pointer;
+  font-size: 3rem;
+  color: var(--border-color);
+}
+
+header .material-icons {    
+  color: var(--secondary-color);
+  font-size: 2rem;
+}
+
+header #search-button .close-icon {
+  display: none;
+}
+
+header #search-button .search-icon {
+  display: inline;
+}
+
+header #search-button.active .search-icon {
+    display: none;
+}
+
+header #search-button.active .close-icon {
+    display: inline;
+}
+
+header #search-input, header #search-button {
+    display: none;
+}
+
+body:has(#pins-section.active) header #search-button, body:has(#pins-section.active) header #search-input {
+    display: block;
+}
+
+/* --------------------------------------------------------------------------------- */
+/* main */
+
+main {
+  flex-grow: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+main section {
+  flex-direction: column;
+  display: none;
+  margin: auto;
+  margin-top: 0;
+  width: 100%;
+  margin-left: 0;
+  max-width: 1440px;
+}
+
+main section.active {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+}
+
+/* --------------------------------------------------------------------------------- */
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 0.3rem;
+}
+::-webkit-scrollbar-track {
+  background: var(--border-color);
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--grey-light);
+  border-radius: var(--border-radius);
+  border: 0.06rem solid var(--border-color);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--primary-color);
+}
+
+
+/* --------------------------------------------------------------------------------- */
+/* Media Queries */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+
+  nav {
+    flex-direction: row;
+    justify-content: space-around;
+    height: auto;
+    width: 100%;
+    padding: 0.5rem;
+  }
+
+  nav a .material-icons, 
+  nav a .material-icons-outlined {
+    font-size: 2rem;
+  }
+}
