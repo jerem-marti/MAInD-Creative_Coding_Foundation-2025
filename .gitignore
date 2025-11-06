@@ -54,11 +54,10 @@ $RECYCLE.BIN/
 dist/
 build/
 public/build/
-.parcel-cache/
-.vite/
+*.parcel-cache/
+*.vite/
 *.cache/
-.cache/
-coverage/
+*coverage/
 
 # Environment files
 .env
