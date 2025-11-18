@@ -16,7 +16,7 @@ export default class Rectangle {
             y : 0
         },
         color = 'white',
-        position = {
+        posParam = {
             relativeTo: 'top-left',
             canvasSize: {
                 width: 0,
@@ -24,37 +24,16 @@ export default class Rectangle {
             }
         }
     } = {}) {
-        switch (position.relativeTo) {
-            case 'top-left':
-                this.x = x;
-                this.y = y;
-                break;
-            case 'top-right':
-                this.x = position.canvasSize.width - x;
-                this.y = y;
-                break;
-            case 'bottom-left':
-                this.x = x;
-                this.y = position.canvasSize.height - y;
-                break;
-            case 'bottom-right':
-                this.x = position.canvasSize.width - x;
-                this.y = position.canvasSize.height - y;
-                break;
-            case 'center':
-                this.x = position.canvasSize.width / 2 + x;
-                this.y = position.canvasSize.height / 2 + y;
-                break;
-        }
-        this.lastX = x - Math.cos(speed.angle) * speed.velocity;
-        this.lastY = y - Math.sin(speed.angle) * speed.velocity;
+        this.setPositionRelativeToCanvas(x, y, posParam);
+        this.lastX = this.x - Math.cos(speed.angle) * speed.velocity;
+        this.lastY = this.y - Math.sin(speed.angle) * speed.velocity;
         this.width = width;
         this.height = height;
         this.mass = mass;
         this.speed = speed;
         this.acceleration = acceleration;
         this.color = color;
-        this.positionRelativeTo = position.relativeTo;
+        this.positionRelativeTo = posParam.relativeTo;
     }
 
     distanceXto({x}) {
@@ -80,19 +59,59 @@ export default class Rectangle {
         );
     }
 
+    setPositionRelativeToCanvas(x, y, posParam) {
+        switch (posParam.relativeTo) {
+            case 'top-left':
+                this.x = x;
+                this.y = y;
+                break;
+            case 'top-right':
+                this.x = posParam.canvasSize.width - x;
+                this.y = y;
+                break;
+            case 'bottom-left':
+                this.x = x;
+                this.y = posParam.canvasSize.height - y;
+                break;
+            case 'bottom-right':
+                this.x = posParam.canvasSize.width - x;
+                this.y = posParam.canvasSize.height - y;
+                break;
+            case 'center':
+                this.x = posParam.canvasSize.width / 2 + x;
+                this.y = posParam.canvasSize.height / 2 + y;
+                break;
+            case 'center-left':
+                this.x = x;
+                this.y = posParam.canvasSize.height / 2 + y;
+                break;
+            case 'center-right':
+                this.x = posParam.canvasSize.width - x;
+                this.y = posParam.canvasSize.height / 2 + y;
+                break;
+        }
+    }
+
     updatePositionRelativeToCanvas(dx, dy) {
         switch (this.positionRelativeTo) {
             case 'top-left':
                 return;
+            case 'center-left':
+                this.y += dy / 2;
+                break;
+            case 'bottom-left':
+            this.y += dy;
+            break;
+            case 'top-right':
+                this.x += dx;
+                break;
+            case 'center-right':
+                this.x += dx;
+                this.y += dy / 2;
+                break;
             case 'bottom-right':
                 this.x += dx;
                 this.y += dy;
-                break;
-            case 'bottom-left':
-                this.y += dy;
-                break;
-            case 'top-right':
-                this.x += dx;
                 break;
             case 'center':
                 this.x += dx / 2;

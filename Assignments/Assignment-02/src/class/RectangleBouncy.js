@@ -50,14 +50,9 @@ export default class RectangleBouncy extends Rectangle {
                 this.x += Math.sign(distanceX) * overlapX;
                 this.lastX = this.x + newLastXDelta;
                 const otherSpeed = Rectangle.getSpeed();
-                console.log("otherSpeed:", otherSpeed);
-                console.log("thisSpeed:", this.getSpeed());
                 const collisionGainedSpeedX = (Rectangle.mass / (this.mass + Rectangle.mass)) * (otherSpeed.x);
-                console.log("collisionGainedSpeedX:", collisionGainedSpeedX);
                 const collisionGainedSpeedY = (Rectangle.mass / (this.mass + Rectangle.mass)) * (otherSpeed.y);
-                console.log("collisionGainedSpeedY:", collisionGainedSpeedY);
                 this.applySpeed(collisionGainedSpeedX, collisionGainedSpeedY);
-                console.log("new thisSpeed:", this.getSpeed());
             } else {
                 const newLastYDelta = bounce * (this.y - this.lastY - this.acceleration.y);
                 this.y += Math.sign(distanceY) * overlapY;
