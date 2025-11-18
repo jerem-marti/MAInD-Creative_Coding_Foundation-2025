@@ -5,13 +5,6 @@
 import {displaySection} from './utils/navigation.js';
 import {displayGame} from './section/game.js';
 
-// Lock the screen orientation to landscape
-// This feature is not Baseline, it does not work in some of the most widely-used browsers.
-// https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation/lock#browser_compatibility 
-// screen.orientation.lock('landscape').catch((error) => {
-//     console.warn("Orientation lock failed:", error);
-// });
-
 const router = () => {
     
     const hashs = window.location.hash.split('-');
