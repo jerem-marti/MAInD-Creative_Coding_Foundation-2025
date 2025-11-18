@@ -32,11 +32,7 @@ const router = () => {
 
 // Listen to hash changes to implement the router
 window.addEventListener('hashchange', (event) => {
-    isLeavingFormUnsaved().then((hasUnsavedChanges) => {
-        if (!hasUnsavedChanges) {
-            router();
-        }
-    });
+    router();
 });
 
 // Call the router once

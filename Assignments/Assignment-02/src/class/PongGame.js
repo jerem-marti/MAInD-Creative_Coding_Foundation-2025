@@ -44,7 +44,7 @@ export default class PongGame {
             width: 20,
             height: 20,
             speed: {
-                velocity: 20,
+                velocity: 1,
                 angle: Math.random() * 2 * Math.PI
             },
             color: 'white'
@@ -77,6 +77,12 @@ export default class PongGame {
             paddle1.draw(ctx);
             paddle2.draw(ctx);
             ball.draw(ctx);
+        });
+
+        MainLoop.setEnd((fps, panic) => {
+            if (panic) {
+                MainLoop.resetFrameDelta();
+            }
         });
     }
 
