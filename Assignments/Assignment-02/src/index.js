@@ -3,6 +3,7 @@
  * Handles navigation between different sections based on URL hash.
  */
 import {displaySection} from './utils/navigation.js';
+import {displayGame} from './section/game.js';
 
 const router = () => {
     
@@ -20,11 +21,12 @@ const router = () => {
             break;
         case '#game':
             displaySection('game');
+            displayGame();
             break;
         default:
             // If the hash does not match any section, display the home section
-            window.location.hash = '#home';
-            displaySection('home');
+            window.location.hash = '#game';
+            displaySection('game');
     }
 };
 
