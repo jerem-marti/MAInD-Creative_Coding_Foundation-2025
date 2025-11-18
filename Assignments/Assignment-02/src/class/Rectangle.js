@@ -5,9 +5,15 @@ export default class Rectangle {
         y = 0,
         width = 100,
         height = 100,
+        mass = 1,
         speed = {
             velocity : 0,
-            angle : 0
+            angle : 0,
+            max : null
+        },
+        acceleration = {
+            x : 0,
+            y : 0
         },
         color = 'white',
         position = {
@@ -44,7 +50,9 @@ export default class Rectangle {
         this.lastY = y - Math.sin(speed.angle) * speed.velocity;
         this.width = width;
         this.height = height;
+        this.mass = mass;
         this.speed = speed;
+        this.acceleration = acceleration;
         this.color = color;
         this.positionRelativeTo = position.relativeTo;
     }
@@ -94,16 +102,57 @@ export default class Rectangle {
     }
 
     move(dt) {
-        if(dt === undefined || dt === null) dt = 0;
-        const dx = this.x - this.lastX;
-        const dy = this.y - this.lastY;
+        const dx = this.x - this.lastX + this.acceleration.x * dt * dt;
+        const dy = this.y - this.lastY + this.acceleration.y * dt * dt;
+
         this.lastX = this.x;
         this.lastY = this.y;
+
+        const currentVelocity = Math.sqrt(dx * dx + dy * dy) / dt;
+
+        if (this.speed.max !== null && currentVelocity > this.speed.max) {
+            const scalingFactor = (this.speed.max * dt) / Math.sqrt(dx * dx + dy * dy);
+            this.x += dx * scalingFactor;
+            this.y += dy * scalingFactor;
+            return;
+        }
+
+        this.y += dy;
+        this.x += dx;
+    }
+
+    setSpeed(vx, vy) {
+        this.lastX = this.x - vx;
+        this.lastY = this.y - vy;
+    }
+
+    applySpeed(vx, vy) {
+        this.lastX -= vx;
+        this.lastY -= vy;
+    }
+
+    getSpeed() {
+        return {
+            x: this.x - this.lastX,
+            y: this.y - this.lastY
+        };
+    }
+
+    setForce(fx, fy, divider = 10000) {
+        this.acceleration.x = fx / divider;
+        this.acceleration.y = fy / divider;
+    }
+
+    applyForce(fx, fy, divider = 10000) {
+        this.acceleration.x += fx / divider;
+        this.acceleration.y += fy / divider;
     }
 
     stop() {
         this.lastX = this.x;
         this.lastY = this.y;
+        this.acceleration.x = 0;
+        this.acceleration.y = 0;
     }
 
     canvasCollision(canvasWidth, canvasHeight) {
