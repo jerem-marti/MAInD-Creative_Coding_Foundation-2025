@@ -9,8 +9,8 @@ const PADDLE_WIDTH = 20;
 const PADDLE_HEIGHT = 100;
 const PADDLE_MASS = 5;
 
-const PADDLE_SPEED = 10;
-const PADDLE_ACCELERATION = 8;
+const PADDLE_SPEED = 15;
+const PADDLE_ACCELERATION = 10;
 
 const BALL_SIZE = 20;
 const BALL_SPEED = 10;
@@ -30,6 +30,7 @@ export default class PongGame {
         //Create a touchscreen object to manage user input
         const touchscreen = new Touchscreen();
 
+        //Create paddles and ball
         const paddle1 = new Rectangle({
             x: PADDLE_POSITION_OFFSET,
             y: ctx.canvas.height / 2,
@@ -66,6 +67,7 @@ export default class PongGame {
             color: 'white'
         });
 
+        //Main loop setup
         MainLoop.setUpdate((dt) => {
             //User input management
             let paddle1Mvt = 0; // Movement for paddle 1 (-1: up, 1: down, 0: no movement)
@@ -95,9 +97,6 @@ export default class PongGame {
                     }
                 }
             }
-
-            // console.log("paddle mvt:", paddle1Mvt, paddle2Mvt);
-            // console.log("paddle pos:", paddle1PositionY, paddle2PositionY);
 
             //Apply movement to paddles
             if (paddle1Mvt !== 0) {
