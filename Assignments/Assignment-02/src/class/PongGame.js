@@ -32,6 +32,7 @@ const SCOREBOARD_FONT = '60px Handjet, Arial';
 const SCOREBOARD_COLOR = 'grey';
 const SCOREBOARD_GAP = 40;
 
+const TEXT_MARGIN = 10;
 const PLAYER_NAME_FONT = '20px Handjet, Arial';
 const PLAYER_NAME_COLOR = 'grey';
 
@@ -39,7 +40,7 @@ const WIN_SCORE = 15;
 
 
 export default class PongGame {
-    constructor(player1, player2, mode = "Single Player") {
+    constructor(player1 = "Player 1", player2 = "Player 2", mode = "Single Player") {
         //Players
         this.player1 = player1;
         this.player2 = player2;
@@ -83,7 +84,7 @@ export default class PongGame {
         //Create scoreboard
         this.scoreboard = new Scoreboard({
             x: 0,
-            y: 0,
+            y: TEXT_MARGIN,
             posParam: {
                 relativeTo: 'top-center',
                 canvasSize: canvasSize
@@ -95,8 +96,8 @@ export default class PongGame {
 
         //Create players' names
         this.player1NameText = new Text({
-            x: 0,
-            y: 0,
+            x: TEXT_MARGIN,
+            y: TEXT_MARGIN,
             posParam: {
                 relativeTo: 'top-left',
                 canvasSize: canvasSize,
@@ -104,11 +105,11 @@ export default class PongGame {
             },
             font: PLAYER_NAME_FONT,
             color: PLAYER_NAME_COLOR,
-            text: this.player1.getName()
+            text: this.player2.getName()
         });
         this.player2NameText = new Text({
-            x: 0,
-            y: 0,
+            x: TEXT_MARGIN,
+            y: TEXT_MARGIN,
             posParam: {
                 relativeTo: 'bottom-right',
                 canvasSize: canvasSize,
@@ -116,7 +117,7 @@ export default class PongGame {
             },
             font: PLAYER_NAME_FONT,
             color: PLAYER_NAME_COLOR,
-            text: this.player2.getName()
+            text: this.player1.getName()
         });
 
         //Main loop setup
@@ -164,7 +165,7 @@ export default class PongGame {
             );
 
             //Update middle line length
-            this.middleLine.lenght = this.getCanvasSize().height;
+            this.middleLine.lenght = this.ctx.canvas.height;
 
             //clear the canvas
             this.clearAndRefreshCanvas();
