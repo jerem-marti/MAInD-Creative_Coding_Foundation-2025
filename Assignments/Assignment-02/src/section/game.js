@@ -1,4 +1,5 @@
 import PongGame from "../class/PongGame";
+import Player from "../class/Player";
 
 let pongGame;
 
@@ -15,8 +16,11 @@ const displayGame = () => {
         canvas.msRequestFullscreen();
     }
     //////////////////////////////////////////////
+
+    const player1 = new Player("Player 1");
+    const player2 = new Player("Player 2");
     
-    pongGame = new PongGame();
+    pongGame = new PongGame(player1, player2);
     pongGame.start();
 };
 

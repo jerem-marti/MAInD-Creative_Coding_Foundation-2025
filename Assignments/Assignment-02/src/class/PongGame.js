@@ -4,11 +4,13 @@ import MainLoop from '../utils/mainloop.js';
 import Rectangle from './Rectangle.js';
 import RectangleBouncy from './RectangleBouncy.js';
 import getScreenOrientation from '../utils/screen.js';
-import audio from '../utils/audio.js';
+import Audio from '../utils/audio.js';
+import LineDotted from './LineDotted.js';
+import Scoreboard from './Scoreboard.js';
 
 const PADDLE_POSITION_OFFSET = 50;
-const PADDLE_WIDTH = 20;
-const PADDLE_HEIGHT = 100;
+const PADDLE_WIDTH = 16;
+const PADDLE_HEIGHT = 80;
 const PADDLE_MASS = 5;
 const PADDLE_1_RELATIVE_TO = "center-left";
 const PADDLE_2_RELATIVE_TO = "center-right";
@@ -16,15 +18,20 @@ const PADDLE_2_RELATIVE_TO = "center-right";
 const PADDLE_SPEED = 15;
 const PADDLE_ACCELERATION = 10;
 
-const BALL_SIZE = 20;
-const BALL_SPEED = 10;
+const BALL_SIZE = 16;
+const BALL_SPEED = 5;
+const BALL_BOUNCINESS = 1.1;
 const BALL_MASS = 1;
 
 const WIN_SCORE = 15;
 
 
 export default class PongGame {
-    constructor() {
+    constructor(player1, player2) {
+        //Players
+        this.player1 = player1;
+        this.player2 = player2;
+
         //Create a canvas and set its size to the size of the window
         this.ctx = document.querySelector('canvas').getContext('2d');
         this.ctx.canvas.width = this.ctx.canvas.clientWidth;
@@ -45,10 +52,26 @@ export default class PongGame {
         this.paddle2 = this.createPaddle(PADDLE_POSITION_OFFSET, 0, { relativeTo: PADDLE_2_RELATIVE_TO, canvasSize: canvasSize });
         this.balls = [this.createBall(canvasSize.width / 2, canvasSize.height / 2)];
 
-        //Game
-        this.players = [];
-        this.scores = [0, 0];
-        this.lastScores = [0, 0];
+        //Create middle line
+        this.middleLine = new LineDotted({
+            x1: canvasSize.width / 2,
+            y1: 0,
+            x2: canvasSize.width / 2,
+            y2: canvasSize.height,
+            color: 'grey',
+            lineWidth: 2,
+            dotLength: 10,
+            gapLength: 10
+        });
+
+        //Create scoreboard
+        this.scoreboard = new Scoreboard({
+            x: canvasSize.width / 2,
+            y: 10,
+            font: `60px Handjet, Arial`,
+            color: 'grey',
+            gap: 40,
+        });
 
         //Main loop setup
         MainLoop.setUpdate((dt) => {
@@ -77,7 +100,8 @@ export default class PongGame {
             this.updatePaddlesPosition(dt, gameWidth, gameHeight, this.paddle1, this.paddle2);
             this.updateBallsPosition(dt, gameWidth, gameHeight, this.balls);
 
-            this.updateScores();
+            //Update scoreboard
+            this.scoreboard.updateScore(this.player1.getScore(), this.player2.getScore());
         });
 
         //Draw loop setup
@@ -95,6 +119,12 @@ export default class PongGame {
                 this.ctx.rotate(Math.PI / 2);
                 this.ctx.translate(0, -this.ctx.canvas.width);
             }
+
+            //draw middle line
+            this.middleLine.draw(this.ctx);
+
+            //draw scoreboard
+            this.scoreboard.draw(this.ctx);
 
             //draw paddles and ball
             this.paddle1.draw(this.ctx);
@@ -149,7 +179,7 @@ export default class PongGame {
             mass: BALL_MASS,
             speed: {
                 velocity: BALL_SPEED,
-                angle: parseInt(Math.random() * 2) * Math.PI
+                angle: parseInt(Math.random() * 2) * Math.PI + (Math.random()-0.5) * (Math.PI / 4), //Random angle towards left or right
             },
         });
     }
@@ -261,39 +291,33 @@ export default class PongGame {
                 // Remove array element
                 balls.splice(i, 1);
                 i--; // Adjust index after removal
-                if(collisionSide === 'left') this.scores[1]++;
-                else this.scores[0]++;
+                if(collisionSide === 'left') this.incrementPlayerScore(this.player2);
+                else this.incrementPlayerScore(this.player1);
             }
-            ball.rectangleCollision(this.paddle1);
-            ball.rectangleCollision(this.paddle2);
+            ball.rectangleCollision(this.paddle1, BALL_BOUNCINESS);
+            ball.rectangleCollision(this.paddle2, BALL_BOUNCINESS);
         }
     }
 
-    updateScores() {
-        for (let i = 0; i < this.scores.length; i++) {
-            if (this.scores[i] !== this.lastScores[i]) {
-                if(this.scores[i] >= WIN_SCORE) {
-                    console.log(`Player ${i + 1} wins!`);
-                    this.endGame();
-                } else {
-                    this.lastScores[i] = this.scores[i];
-                    setTimeout(() => {
-                        // Reset ball to center after a score
-                        this.balls.push(this.createBall(
-                            (this.paddle1.x + this.paddle2.x) / 2,
-                            (this.paddle1.y + this.paddle2.y) / 2
-                        ));
-                    }, 2000);
-                    audio.playWinPointSound();
-                }
-            }
+    incrementPlayerScore(player) {
+        player.incrementScore();
+        if (player.getScore() >= WIN_SCORE) {
+            this.endGame(player);
+        } else {
+            setTimeout(() => {
+                // Reset ball to center after a score
+                this.balls.push(this.createBall(
+                    (this.paddle1.x + this.paddle2.x) / 2,
+                    (this.paddle1.y + this.paddle2.y) / 2
+                ));
+            }, 2000);
+            Audio.playWinPointSound();  
         }
-        console.log(`Scores: Player 1 - ${this.scores[0]}, Player 2 - ${this.scores[1]}`);
     }
 
     endGame() {
         this.stop();
-        audio.playWinSound();
+        Audio.playWinSound();
         console.log("Game Over");
     }
 }
