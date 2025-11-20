@@ -16,6 +16,17 @@ export default class Keyboard {
          * @type {Set<string>}
          */
         this.keydown = new Set();
+        
+        /**
+         * Stored event handler references for cleanup.
+         * @type {Object}
+         * @private
+         */
+        this.handlers = {
+            keydown: null,
+            keyup: null
+        };
+        
         this.init();
     }
 
@@ -27,12 +38,15 @@ export default class Keyboard {
      * @method init
      */
     init() {
-        document.addEventListener('keydown', event => {
+        this.handlers.keydown = event => {
             this.keydown.add(event.code);
-        });
-        document.addEventListener('keyup', event => {
+        };
+        document.addEventListener('keydown', this.handlers.keydown);
+        
+        this.handlers.keyup = event => {
             this.keydown.delete(event.code);
-        });
+        };
+        document.addEventListener('keyup', this.handlers.keyup);
     }
 
     /**
@@ -44,5 +58,27 @@ export default class Keyboard {
      */
     isDown(keyCode) {
         return this.keydown.has(keyCode);
+    }
+    
+    /**
+     * Cleans up all event listeners and clears key state.
+     * Should be called when the Keyboard instance is no longer needed to prevent memory leaks.
+     * 
+     * @method destroy
+     */
+    destroy() {
+        // Remove event listeners
+        if (this.handlers.keydown) {
+            document.removeEventListener('keydown', this.handlers.keydown);
+        }
+        if (this.handlers.keyup) {
+            document.removeEventListener('keyup', this.handlers.keyup);
+        }
+        
+        // Clear pressed keys
+        this.keydown.clear();
+        
+        // Clear handler references
+        this.handlers = {};
     }
 }

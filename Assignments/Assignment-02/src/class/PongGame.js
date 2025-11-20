@@ -249,12 +249,22 @@ export default class PongGame {
     }
 
     /**
-     * Stops the game loop.
+     * Stops the game loop and cleans up input handlers.
+     * Removes all keyboard and touchscreen event listeners to prevent
+     * blocking interactions after the game ends.
      * 
      * @method stop
      */
     stop() {
         MainLoop.stop();
+        
+        // Clean up input handlers
+        if (this.keyboard) {
+            this.keyboard.destroy();
+        }
+        if (this.touchscreen) {
+            this.touchscreen.destroy();
+        }
     }
 
     /**
