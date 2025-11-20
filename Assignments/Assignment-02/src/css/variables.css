@@ -1,0 +1,48 @@
+:root {
+  /* Typography */
+  --font-family: 'Roboto', sans-serif;
+  --font-size: 20px;
+  --tablet-font-size: 18px;
+  --mobile-font-size: 16px;
+  --line-height: 1.2;
+
+  --text-size-h2: 3.5rem;
+  --tablet-text-size-h2: 3rem;
+  --mobile-text-size-h2: 2rem;
+
+  --text-size-h3: 3rem;
+  --tablet-text-size-h3: 2.8rem;
+  --mobile-text-size-h3: 1.6rem;
+
+  --text-size-h4: 2.5rem;
+  --tablet-text-size-h4: 2.5rem;
+  --mobile-text-size-h4: 1.2rem;
+
+  --text-size-placeholder: 1.2rem;
+  --text-size-footnote: 0.8rem;
+  
+  /* Colors */
+  --primary-color: #0474ff;
+  --primary-color-dark: #002450;
+  --secondary-color: #181818;
+  --bg-color: #121212;
+  --text-color: #fff;
+  --border-color: #272727;
+  --grey-light: #9c9c9c;
+
+  /* Globals */
+  --border-radius: 0.5rem;
+  --app-padding: 1rem;
+
+  /* Animations */
+  /*
+    only set the default transition parameters.
+    This allows to have consistent animations, but leaves the freedom to the element to choose which attribute(s) to animate.
+  */
+  --default-transition: 300ms ease-in-out;
+
+  /* Breakpoints */
+  --breakpoint-mobile: 768px;
+  --breakpoint-tablet: 1024px;
+  --breakpoint-desktop: 1440px;
+}
