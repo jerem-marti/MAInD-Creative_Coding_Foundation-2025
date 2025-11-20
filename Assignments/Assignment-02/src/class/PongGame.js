@@ -41,7 +41,7 @@ const PLAYER_NAME_1_ORIENTATION = "up";
 const PLAYER_NAME_2_RELATIVE_TO = "top-left";
 const PLAYER_NAME_2_ORIENTATION = "down";
 
-const WIN_SCORE = 2;
+const WIN_SCORE = 15;
 
 
 export default class PongGame {
@@ -377,9 +377,7 @@ export default class PongGame {
     }
 
     incrementPlayerScore(player) {
-        console.log("Point for " + player.getName());
         player.incrementScore();
-        console.log("New score: " + player.getScore());
         if (player.getScore() >= WIN_SCORE) {
             this.endGame(player);
         } else {

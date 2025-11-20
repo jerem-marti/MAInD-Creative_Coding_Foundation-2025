@@ -10,8 +10,11 @@ const displayGame = (player1Name = "Player 1", player2Name = "Player 2", mode = 
     
     pongGame = new PongGame(player1, player2, mode);
     pongGame.onEnded(() => {
-        console.log("Go to end game screen");
-        window.location.hash = '#end-game'; 
+        // quit fullscreen
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        }
+        window.location.hash = '#end-game';
     });
     pongGame.start();
 };
