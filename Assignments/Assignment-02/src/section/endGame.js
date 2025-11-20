@@ -8,7 +8,6 @@ const player2UsernameElement = document.getElementById('end-game-player2-usernam
 const player1ResultElement = document.getElementById('end-game-player1-result');
 const player2ResultElement = document.getElementById('end-game-player2-result');
 const playAgainButton = document.getElementById('end-game-play-again-button');
-const returnHomeButton = document.getElementById('end-game-return-home-button');
 
 const displayEndGame = () => {
     const latestGame = getLatestGame();
@@ -56,10 +55,6 @@ playAgainButton.addEventListener('click', () => {
     }
     // change hash to start the game by passing player names and mode in query params
     window.location.hash = `#game?player1=${encodeURIComponent(latestGame.player1.name)}&player2=${encodeURIComponent(latestGame.player2.name)}&mode=${encodeURIComponent(latestGame.mode)}`;
-});
-
-returnHomeButton.addEventListener('click', () => {
-    window.location.hash = '#home';
 });
 
 export {displayEndGame};

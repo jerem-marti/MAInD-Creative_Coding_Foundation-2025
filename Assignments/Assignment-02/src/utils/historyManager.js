@@ -25,6 +25,11 @@ const saveHistory = () => {
     setLocalStorageItem('pongGameHistory', historyArray);
 }
 
+const clearHistory = () => {
+    history.clear();
+    saveHistory();
+};
+
 const addGameResultToHistory = (player1Name, player1Score, player2Name, player2Score, mode) => {
     if (!player1Name || !player2Name || player1Score === undefined || player2Score === undefined) {
         throw new Error("Both Player1 and Player2 data must be provided.");
@@ -43,4 +48,4 @@ const addGameResultToHistory = (player1Name, player1Score, player2Name, player2S
     saveHistory();
 }
 
-export { addGameResultToHistory, getHistory, getLatestGame, initializeHistory, saveHistory };
+export { addGameResultToHistory, getHistory, getLatestGame, initializeHistory, saveHistory, clearHistory };

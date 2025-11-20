@@ -6,6 +6,10 @@
   --mobile-font-size: 16px;
   --line-height: 1.2;
 
+  --text-size-h1: 6rem;
+  --tablet-text-size-h1: 4rem;
+  --mobile-text-size-h1: 2.5rem;
+
   --text-size-h2: 3.5rem;
   --tablet-text-size-h2: 3rem;
   --mobile-text-size-h2: 2rem;

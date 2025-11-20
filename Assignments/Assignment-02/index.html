@@ -9,17 +9,44 @@
   </head>
   <body>
     <header>
-      <h1>Pong Game</h1>
+      <a href="#home" id="header-logo"><h1>Pong Game</h1></a>
+      <div id="header-buttons-container">
+        <a href="#new-game" id="header-new-game-link" class="button">New Game</a>
+        <a href="#history" id="header-history-link" class="button">History</a>
+      </div>
     </header>
     <main>
       <section id="home-section">
-
+        <h1 id="home-title">Pong Game</h1>
+        <p id="home-history-text">
+          Pong is one of the earliest arcade video games, originally released by Atari in 1972. 
+          Created by Allan Alcorn, it became a cultural phenomenon and helped establish the video game industry. 
+          The game simulates table tennis, where players control paddles to hit a ball back and forth across the screen.
+        </p>
+        <a id="home-play-link" class="button" href="#new-game">Play</a>
+        <h2 id="home-rules-title">Rules</h2>
+        <p id="home-rules-text">
+          The objective of Pong is to score points by making the ball pass your opponent's paddle. 
+          Each player controls a paddle that can move along their side of the screen. 
+          The ball bounces off the paddles and the top and bottom edges of the screen. 
+          If the ball passes a player's paddle, the opposing player scores a point. 
+          The game continues until a player reaches a 15-point score.
+        </p>
+        <h3 id="home-rules-list-title">Rules cheat sheet</h3>
+        <ul id="home-rules-list">
+          <li>Score points by making the ball pass your opponent's paddle.</li>
+          <li>The first player to reach 15 points wins the game.</li>
+          <li>The ball bounces off paddles and screen edges.</li>
+          <li>The ball gets the inertia of the paddle it hits.</li>
+          <li>The ball accelerates slightly after each paddle hit.</li>
+          <li>Players can control their paddles using keyboard or touch input.</li>
+        </ul>
       </section>
 
       <section id="new-game-section">
         <h2 id="new-game-title">New Game</h2>
         <form id="new-game-form">
-          <fieldset id="new-game-mode-fieldset">
+          <!-- <fieldset id="new-game-mode-fieldset">
             <legend id="new-game-mode-legend">Select Game Mode:</legend>
             <div id="game-mode-options">
               <label for="single-player">Single Player</label>
@@ -27,7 +54,7 @@
               <label for="two-players">Two Players</label>
               <input type="radio" id="two-players" name="game-mode" value="Two Players" />
             </div>
-          </fieldset>
+          </fieldset> -->
           <label for="player1-username">Player 1 Username:</label>
           <input type="text" id="player1-username" name="player1-username" required />
           <label for="player2-username">Player 2 Username:</label>
@@ -37,7 +64,11 @@
       </section>
 
       <section id="history-section">
-
+        <h2 id="history-title">Game History</h2>
+        <ul id="history-list">
+          <!-- History items will be dynamically added here -->
+        </ul>
+        <button id="history-clear-button" type="button">Clear History</button>
       </section>
 
       <section id="game-section">
@@ -61,9 +92,12 @@
           </div>
         </p>
         <button id="end-game-play-again-button" type="button">Play Again</button>
-        <button id="end-game-return-home-button" type="button">Return to home</button>
+        <a id="end-game-return-home-link" class="button" href="#home">Return to home</a>
       </section>
     </main>
-    
+    <footer>
+      <p>Created by Jérémy Martin - SUPSI MAInD Creative Coding Foundations - Assignment 02</p>
+      <a href="https://github.com/jerem-marti/MAInD-Creative_Coding_Foundation-2025/tree/7e6464c87c001b6a569405586f8738c0bec010d9/Assignments/Assignment-02" target="_blank">GitHub Repository</a>
+    </footer>
   </body>
 </html>

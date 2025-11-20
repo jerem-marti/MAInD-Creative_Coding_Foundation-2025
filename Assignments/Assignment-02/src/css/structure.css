@@ -2,10 +2,18 @@
 /* html body */
 
 /* Make sure the html and body take the full height of the viewport */
-html, body {
+html {
   width: 100dvw;
   height: 100dvh;
   background-color: var(--bg-color);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: stretch;
+  padding: var(--app-padding);
 }
 
 /* --------------------------------------------------------------------------------- */
@@ -14,14 +22,20 @@ html, body {
 header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
 }
 
-h1 {
+body:has(#game-section.active) header,
+body:has(#game-section.active) footer {
+  display: none;
+}
+
+body:has(#home-section.active) header #header-logo {
+  display: none;
+}
+
+/* h1 {
     visibility: hidden;
     position: absolute;
     left: 0;
@@ -31,14 +45,13 @@ h1 {
     overflow: hidden;
     margin-right: -1px;
     margin-top: -1px;
-}
+} */
 
 /* --------------------------------------------------------------------------------- */
 /* main */
 
 main {
   flex-grow: 1;
-  padding: var(--app-padding);
   overflow-y: auto;
   display: flex;
   flex-direction: column;

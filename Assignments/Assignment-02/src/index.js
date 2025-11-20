@@ -6,6 +6,7 @@ import {displaySection, getQueryParamsFromHash} from './utils/navigation.js';
 import {displayGame} from './section/game.js';
 import {displayNewGame} from './section/newGame.js'
 import {displayEndGame} from './section/endGame.js';
+import {displayHistory} from './section/history.js';
 import { initializeHistory } from './utils/historyManager.js';
 
 // Initialize history from local storage
@@ -27,7 +28,7 @@ const router = () => {
             break;
         case '#history':
             displaySection('history');
-            displayNewGame();
+            displayHistory();
             break;
         case '#game':
             const player1 = queryParams.get('player1');
@@ -42,7 +43,7 @@ const router = () => {
             break;
         default:
             // If the hash does not match any section, display the home section
-            window.location.hash = '#new-game';
+            window.location.hash = '#home';
     }
 };
 

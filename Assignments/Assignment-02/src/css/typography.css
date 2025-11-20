@@ -11,7 +11,7 @@
 }
 
 h1 {
-  visibility: hidden;
+  font-size: var(--text-size-h1);
 }
 
 h2 {
@@ -54,6 +54,9 @@ h6 {
   html {
     font-size: var(--tablet-font-size);
   }
+  h1 {
+    font-size: var(--tablet-text-size-h1);
+  }
   h2 {
     font-size: var(--tablet-text-size-h2);
   }
@@ -68,6 +71,9 @@ h6 {
 @media (max-width: 768px) {
   html {
     font-size: var(--mobile-font-size);
+  }
+  h1 {
+    font-size: var(--mobile-text-size-h1);
   }
   h2 {
     font-size: var(--mobile-text-size-h2);
