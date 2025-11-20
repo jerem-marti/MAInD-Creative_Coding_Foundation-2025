@@ -26,9 +26,9 @@ const WIN_SCORE = 15;
 export default class PongGame {
     constructor() {
         //Create a canvas and set its size to the size of the window
-        const ctx = document.querySelector('canvas').getContext('2d');
-        ctx.canvas.width = ctx.canvas.clientWidth;
-        ctx.canvas.height = ctx.canvas.clientHeight;
+        this.ctx = document.querySelector('canvas').getContext('2d');
+        this.ctx.canvas.width = this.ctx.canvas.clientWidth;
+        this.ctx.canvas.height = this.ctx.canvas.clientHeight;
 
         //Create a keyboard object to manage user input
         this.keyboard = new Keyboard();
@@ -40,7 +40,7 @@ export default class PongGame {
         this.screenOrientation = getScreenOrientation();
 
         //Create paddles and ball
-        let canvasSize = this.getCanvasSize(ctx);
+        let canvasSize = this.getCanvasSize();
         this.paddle1 = this.createPaddle(PADDLE_POSITION_OFFSET, 0, { relativeTo: PADDLE_1_RELATIVE_TO, canvasSize: canvasSize });
         this.paddle2 = this.createPaddle(PADDLE_POSITION_OFFSET, 0, { relativeTo: PADDLE_2_RELATIVE_TO, canvasSize: canvasSize });
         this.balls = [this.createBall(canvasSize.width / 2, canvasSize.height / 2)];
@@ -56,12 +56,12 @@ export default class PongGame {
             if (this.screenOrientation !== getScreenOrientation()) {
                 this.screenOrientation = getScreenOrientation();
                 //Reset paddles position relative to canvas
-                this.paddle1.setPositionRelativeToCanvas(PADDLE_POSITION_OFFSET, 0, { relativeTo: PADDLE_1_RELATIVE_TO, canvasSize: this.getCanvasSize(ctx)});
-                this.paddle2.setPositionRelativeToCanvas(PADDLE_POSITION_OFFSET, 0, {relativeTo: PADDLE_2_RELATIVE_TO, canvasSize: this.getCanvasSize(ctx)});
+                this.paddle1.setPositionRelativeToCanvas(PADDLE_POSITION_OFFSET, 0, { relativeTo: PADDLE_1_RELATIVE_TO, canvasSize: this.getCanvasSize()});
+                this.paddle2.setPositionRelativeToCanvas(PADDLE_POSITION_OFFSET, 0, {relativeTo: PADDLE_2_RELATIVE_TO, canvasSize: this.getCanvasSize()});
             }
             //Get logical game dimensions (swap if portrait)
-            const gameWidth = this.screenOrientation === "portrait" ? ctx.canvas.height : ctx.canvas.width;
-            const gameHeight = this.screenOrientation === "portrait" ? ctx.canvas.width : ctx.canvas.height;
+            const gameWidth = this.screenOrientation === "portrait" ? this.ctx.canvas.height : this.ctx.canvas.width;
+            const gameHeight = this.screenOrientation === "portrait" ? this.ctx.canvas.width : this.ctx.canvas.height;
 
             //Keyboard input
             const paddleKeyboardMvt = this.getPaddleKeyboardMvt();
@@ -83,29 +83,29 @@ export default class PongGame {
         //Draw loop setup
         MainLoop.setDraw(() => {
             //Update element relative to canvas size if needed
-            this.updateElementPosRelativeToCanvas(ctx, this.paddle1, this.paddle2, ...this.balls);
+            this.updateElementPosRelativeToCanvas(this.paddle1, this.paddle2, ...this.balls);
 
             //clear the canvas
-            this.clearAndRefreshCanvas(ctx);
+            this.clearAndRefreshCanvas();
 
             //Rotate canvas if in portrait mode (width < height)
-            if (ctx.canvas.width < ctx.canvas.height) {
-                ctx.save();
+            if (this.ctx.canvas.width < this.ctx.canvas.height) {
+                this.ctx.save();
                 //Translate to center, rotate 90 degrees, then translate back
-                ctx.rotate(Math.PI / 2);
-                ctx.translate(0, -ctx.canvas.width);
+                this.ctx.rotate(Math.PI / 2);
+                this.ctx.translate(0, -this.ctx.canvas.width);
             }
 
             //draw paddles and ball
-            this.paddle1.draw(ctx);
-            this.paddle2.draw(ctx);
+            this.paddle1.draw(this.ctx);
+            this.paddle2.draw(this.ctx);
             for (let b of this.balls) {
-                b.draw(ctx);
+                b.draw(this.ctx);
             }
 
             //Restore canvas state if rotated
-            if (ctx.canvas.width < ctx.canvas.height) {
-                ctx.restore();
+            if (this.ctx.canvas.width < this.ctx.canvas.height) {
+                this.ctx.restore();
             }
         });
 
@@ -149,31 +149,31 @@ export default class PongGame {
             mass: BALL_MASS,
             speed: {
                 velocity: BALL_SPEED,
-                angle: Math.random() * 2 * Math.PI
+                angle: parseInt(Math.random() * 2) * Math.PI
             },
         });
     }
 
-    clearAndRefreshCanvas(ctx) {
-        ctx.canvas.width = ctx.canvas.clientWidth;
-        ctx.canvas.height = ctx.canvas.clientHeight;
+    clearAndRefreshCanvas() {
+        this.ctx.canvas.width = this.ctx.canvas.clientWidth;
+        this.ctx.canvas.height = this.ctx.canvas.clientHeight;
     }
 
-    getCanvasSize(ctx) {
+    getCanvasSize() {
         return {
-            width: this.screenOrientation === "portrait" ? ctx.canvas.height : ctx.canvas.width,
-            height: this.screenOrientation === "portrait" ? ctx.canvas.width : ctx.canvas.height
+            width: this.screenOrientation === "portrait" ? this.ctx.canvas.height : this.ctx.canvas.width,
+            height: this.screenOrientation === "portrait" ? this.ctx.canvas.width : this.ctx.canvas.height
         };
     }
 
-    updateElementPosRelativeToCanvas(ctx, ...elements) {
+    updateElementPosRelativeToCanvas(...elements) {
         let dx, dy;
         if(this.screenOrientation === "portrait") {
-            dx = (ctx.canvas.clientHeight - ctx.canvas.height);
-            dy = (ctx.canvas.clientWidth - ctx.canvas.width);
+            dx = (this.ctx.canvas.clientHeight - this.ctx.canvas.height);
+            dy = (this.ctx.canvas.clientWidth - this.ctx.canvas.width);
         } else {
-            dx = (ctx.canvas.clientWidth - ctx.canvas.width);
-            dy = (ctx.canvas.clientHeight - ctx.canvas.height);
+            dx = (this.ctx.canvas.clientWidth - this.ctx.canvas.width);
+            dy = (this.ctx.canvas.clientHeight - this.ctx.canvas.height);
         }
         for (let element of elements) {
             element.updatePositionRelativeToCanvas(dx, dy);
