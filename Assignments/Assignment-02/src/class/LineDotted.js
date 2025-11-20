@@ -1,18 +1,26 @@
-export default class LineDotted {
+import CanvasElement from './CanvasElement.js';
+
+export default class LineDotted extends CanvasElement {
     constructor({
-        x1 = 0,
-        y1 = 0,
-        x2 = 100,
-        y2 = 100,
+        x = 0,
+        y = 0,
+        lenght = 100,
+        angle = Math.PI / 2,
+        posParam = {
+            relativeTo: 'top-left',
+            canvasSize: {
+                width: 0,
+                height: 0
+            }
+        },
         color = 'white',
         lineWidth = 1,
         dotLength = 5,
         gapLength = 5
     } = {}) {
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
+        super({x, y, posParam});
+        this.lenght = lenght;
+        this.angle = angle;
         this.color = color;
         this.lineWidth = lineWidth;
         this.dotLength = dotLength;
@@ -22,16 +30,15 @@ export default class LineDotted {
     draw(ctx) {
         ctx.strokeStyle = this.color;
         ctx.lineWidth = this.lineWidth;
-        const deltaX = this.x2 - this.x1;
-        const deltaY = this.y2 - this.y1;
-        const lineLength = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        const dashCount = Math.floor(lineLength / (this.dotLength + this.gapLength));
-        const dashX = (deltaX / lineLength) * this.dotLength;
-        const dashY = (deltaY / lineLength) * this.dotLength;
-        const gapX = (deltaX / lineLength) * this.gapLength;
-        const gapY = (deltaY / lineLength) * this.gapLength;
-        let currentX = this.x1;
-        let currentY = this.y1;
+        const deltaX = this.lenght * Math.cos(this.angle);
+        const deltaY = this.lenght * Math.sin(this.angle);
+        const dashCount = Math.floor(this.lenght / (this.dotLength + this.gapLength));
+        const dashX = (deltaX / this.lenght) * this.dotLength;
+        const dashY = (deltaY / this.lenght) * this.dotLength;
+        const gapX = (deltaX / this.lenght) * this.gapLength;
+        const gapY = (deltaY / this.lenght) * this.gapLength;
+        let currentX = this.x;
+        let currentY = this.y;
         for (let i = 0; i < dashCount; i++) {
             ctx.beginPath();
             ctx.moveTo(currentX, currentY);

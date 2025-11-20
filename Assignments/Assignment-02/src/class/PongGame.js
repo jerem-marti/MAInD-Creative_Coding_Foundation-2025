@@ -54,10 +54,14 @@ export default class PongGame {
 
         //Create middle line
         this.middleLine = new LineDotted({
-            x1: canvasSize.width / 2,
-            y1: 0,
-            x2: canvasSize.width / 2,
-            y2: canvasSize.height,
+            x: 0,
+            y: 0,
+            posParam: {
+                relativeTo: 'top-center',
+                canvasSize: canvasSize
+            },
+            lenght: canvasSize.height,
+            angle: Math.PI / 2,
             color: 'grey',
             lineWidth: 2,
             dotLength: 10,
@@ -66,8 +70,12 @@ export default class PongGame {
 
         //Create scoreboard
         this.scoreboard = new Scoreboard({
-            x: canvasSize.width / 2,
+            x: 0,
             y: 10,
+            posParam: {
+                relativeTo: 'top-center',
+                canvasSize: canvasSize
+            },
             font: `60px Handjet, Arial`,
             color: 'grey',
             gap: 40,
@@ -107,7 +115,10 @@ export default class PongGame {
         //Draw loop setup
         MainLoop.setDraw(() => {
             //Update element relative to canvas size if needed
-            this.updateElementPosRelativeToCanvas(this.paddle1, this.paddle2, ...this.balls);
+            this.updateElementPosRelativeToCanvas(this.middleLine, this.scoreboard, this.paddle1, this.paddle2, ...this.balls);
+
+            //Update middle line length
+            this.middleLine.lenght = this.getCanvasSize().height;
 
             //clear the canvas
             this.clearAndRefreshCanvas();

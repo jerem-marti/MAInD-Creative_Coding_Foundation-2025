@@ -1,7 +1,16 @@
-export default class Scoreboard {
+import CanvasElement from './CanvasElement.js';
+
+export default class Scoreboard extends CanvasElement {
     constructor({
         x = 0,
         y = 0,
+        posParam = {
+            relativeTo: 'top-left',
+            canvasSize: {
+                width: 0,
+                height: 0
+            }
+        },
         font = '20px Arial',
         color = 'white',
         gap = 50,
@@ -10,8 +19,7 @@ export default class Scoreboard {
             right: 0
         }
     }={}) {
-        this.x = x;
-        this.y = y;
+        super({x, y, posParam});
         this.font = font;
         this.color = color;
         this.gap = gap;

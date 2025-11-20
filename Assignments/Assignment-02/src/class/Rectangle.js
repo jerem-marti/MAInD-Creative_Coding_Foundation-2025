@@ -1,4 +1,6 @@
-export default class Rectangle {
+import CanvasElement from './CanvasElement.js';
+
+export default class Rectangle extends CanvasElement {
     
     constructor({
         x = 0,
@@ -24,7 +26,7 @@ export default class Rectangle {
             }
         }
     } = {}) {
-        this.setPositionRelativeToCanvas(x, y, posParam);
+        super({x, y, posParam});
         this.lastX = this.x - Math.cos(speed.angle) * speed.velocity;
         this.lastY = this.y - Math.sin(speed.angle) * speed.velocity;
         this.width = width;
@@ -57,67 +59,6 @@ export default class Rectangle {
             this.width,
             this.height,
         );
-    }
-
-    setPositionRelativeToCanvas(x, y, posParam) {
-        switch (posParam.relativeTo) {
-            case 'top-left':
-                this.x = x;
-                this.y = y;
-                break;
-            case 'top-right':
-                this.x = posParam.canvasSize.width - x;
-                this.y = y;
-                break;
-            case 'bottom-left':
-                this.x = x;
-                this.y = posParam.canvasSize.height - y;
-                break;
-            case 'bottom-right':
-                this.x = posParam.canvasSize.width - x;
-                this.y = posParam.canvasSize.height - y;
-                break;
-            case 'center':
-                this.x = posParam.canvasSize.width / 2 + x;
-                this.y = posParam.canvasSize.height / 2 + y;
-                break;
-            case 'center-left':
-                this.x = x;
-                this.y = posParam.canvasSize.height / 2 + y;
-                break;
-            case 'center-right':
-                this.x = posParam.canvasSize.width - x;
-                this.y = posParam.canvasSize.height / 2 + y;
-                break;
-        }
-    }
-
-    updatePositionRelativeToCanvas(dx, dy) {
-        switch (this.positionRelativeTo) {
-            case 'top-left':
-                return;
-            case 'center-left':
-                this.y += dy / 2;
-                break;
-            case 'bottom-left':
-            this.y += dy;
-            break;
-            case 'top-right':
-                this.x += dx;
-                break;
-            case 'center-right':
-                this.x += dx;
-                this.y += dy / 2;
-                break;
-            case 'bottom-right':
-                this.x += dx;
-                this.y += dy;
-                break;
-            case 'center':
-                this.x += dx / 2;
-                this.y += dy / 2;
-                break;
-        }
     }
 
     move(dt) {
