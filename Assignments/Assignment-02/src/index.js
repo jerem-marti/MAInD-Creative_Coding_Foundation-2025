@@ -2,26 +2,33 @@
  * @file Router for the application.
  * Handles navigation between different sections based on URL hash.
  */
-import {displaySection} from './utils/navigation.js';
+import {displaySection, getQueryParamsFromHash} from './utils/navigation.js';
 import {displayGame} from './section/game.js';
+import {displayNewGame} from './section/newGame.js';
 
 const router = () => {
     
-    const hashs = window.location.hash.split('-');
+    const queryParams = getQueryParamsFromHash();
+    const hashs = window.location.hash.split('?')[0].split('/');
 
     switch(hashs[0]) {
         case '#home':
             displaySection('home');
             break;
-        case '#username':
-            displaySection('username');
+        case '#new-game':
+            displaySection('new-game');
+
             break;
         case '#history':
             displaySection('history');
+            displayNewGame();
             break;
         case '#game':
+            const player1 = queryParams.get('player1');
+            const player2 = queryParams.get('player2');
+            const mode = queryParams.get('mode');
             displaySection('game');
-            displayGame();
+            displayGame(player1, player2, mode);
             break;
         default:
             // If the hash does not match any section, display the home section

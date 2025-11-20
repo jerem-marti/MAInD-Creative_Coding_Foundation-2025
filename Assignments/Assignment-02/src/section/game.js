@@ -3,24 +3,12 @@ import Player from "../class/Player";
 
 let pongGame;
 
-const displayGame = () => {
+const displayGame = (player1Name = "Player 1", player2Name = "Player 2", mode = "Single Player") => {
 
-    // NEED TO PLACE THE FULLSCREEN ON USER ACTION
-    const canvas = document.querySelector('canvas');
-    // Ask to fullscreen
-    if (!document.fullscreenElement) {
-        canvas.requestFullscreen();
-    } else if (document.documentElement.webkitRequestFullscreen) { /* Safari */
-        canvas.webkitRequestFullscreen();
-    } else if (document.documentElement.msRequestFullscreen) { /* IE11 */
-        canvas.msRequestFullscreen();
-    }
-    //////////////////////////////////////////////
-
-    const player1 = new Player("Player 1");
-    const player2 = new Player("Player 2");
+    const player1 = new Player(player1Name);
+    const player2 = new Player(player2Name);
     
-    pongGame = new PongGame(player1, player2);
+    pongGame = new PongGame(player1, player2, mode);
     pongGame.start();
 };
 

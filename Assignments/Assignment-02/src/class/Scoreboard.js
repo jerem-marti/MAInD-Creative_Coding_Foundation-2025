@@ -63,8 +63,6 @@ export default class Scoreboard extends CanvasElement {
 
         //Calculate total width and center position
         const startX = this.x - leftWidth - this.gap / 2;
-
-        console.log(height);
         
         ctx.fillText(leftText, startX, this.y + height);
         ctx.fillText(rightText, startX + leftWidth + this.gap, this.y + height);

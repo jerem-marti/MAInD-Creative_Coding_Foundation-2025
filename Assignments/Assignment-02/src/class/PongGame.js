@@ -7,6 +7,7 @@ import getScreenOrientation from '../utils/screen.js';
 import Audio from '../utils/audio.js';
 import LineDotted from './LineDotted.js';
 import Scoreboard from './Scoreboard.js';
+import Text from './Text.js';
 
 const PADDLE_POSITION_OFFSET = 50;
 const PADDLE_WIDTH = 16;
@@ -23,11 +24,22 @@ const BALL_SPEED = 5;
 const BALL_BOUNCINESS = 1.1;
 const BALL_MASS = 1;
 
+const LINE_DOTTED_WIDTH = 2;
+const LINE_DOTTED_DOT_LENGTH = 10;
+const LINE_DOTTED_GAP_LENGTH = 10;
+
+const SCOREBOARD_FONT = '60px Handjet, Arial';
+const SCOREBOARD_COLOR = 'grey';
+const SCOREBOARD_GAP = 40;
+
+const PLAYER_NAME_FONT = '20px Handjet, Arial';
+const PLAYER_NAME_COLOR = 'grey';
+
 const WIN_SCORE = 15;
 
 
 export default class PongGame {
-    constructor(player1, player2) {
+    constructor(player1, player2, mode = "Single Player") {
         //Players
         this.player1 = player1;
         this.player2 = player2;
@@ -63,22 +75,48 @@ export default class PongGame {
             lenght: canvasSize.height,
             angle: Math.PI / 2,
             color: 'grey',
-            lineWidth: 2,
-            dotLength: 10,
-            gapLength: 10
+            lineWidth: LINE_DOTTED_WIDTH,
+            dotLength: LINE_DOTTED_DOT_LENGTH,
+            gapLength: LINE_DOTTED_GAP_LENGTH
         });
 
         //Create scoreboard
         this.scoreboard = new Scoreboard({
             x: 0,
-            y: 10,
+            y: 0,
             posParam: {
                 relativeTo: 'top-center',
                 canvasSize: canvasSize
             },
-            font: `60px Handjet, Arial`,
-            color: 'grey',
-            gap: 40,
+            font: SCOREBOARD_FONT,
+            color: SCOREBOARD_COLOR,
+            gap: SCOREBOARD_GAP,
+        });
+
+        //Create players' names
+        this.player1NameText = new Text({
+            x: 0,
+            y: 0,
+            posParam: {
+                relativeTo: 'top-left',
+                canvasSize: canvasSize,
+                orientation: "down"
+            },
+            font: PLAYER_NAME_FONT,
+            color: PLAYER_NAME_COLOR,
+            text: this.player1.getName()
+        });
+        this.player2NameText = new Text({
+            x: 0,
+            y: 0,
+            posParam: {
+                relativeTo: 'bottom-right',
+                canvasSize: canvasSize,
+                orientation: "up"
+            },
+            font: PLAYER_NAME_FONT,
+            color: PLAYER_NAME_COLOR,
+            text: this.player2.getName()
         });
 
         //Main loop setup
@@ -115,7 +153,15 @@ export default class PongGame {
         //Draw loop setup
         MainLoop.setDraw(() => {
             //Update element relative to canvas size if needed
-            this.updateElementPosRelativeToCanvas(this.middleLine, this.scoreboard, this.paddle1, this.paddle2, ...this.balls);
+            this.updateElementPosRelativeToCanvas(
+                this.middleLine, 
+                this.scoreboard, 
+                this.player1NameText, 
+                this.player2NameText, 
+                this.paddle1, 
+                this.paddle2, 
+                ...this.balls
+            );
 
             //Update middle line length
             this.middleLine.lenght = this.getCanvasSize().height;
@@ -136,6 +182,10 @@ export default class PongGame {
 
             //draw scoreboard
             this.scoreboard.draw(this.ctx);
+
+            //draw players' names
+            this.player1NameText.draw(this.ctx);
+            this.player2NameText.draw(this.ctx);
 
             //draw paddles and ball
             this.paddle1.draw(this.ctx);
@@ -329,6 +379,5 @@ export default class PongGame {
     endGame() {
         this.stop();
         Audio.playWinSound();
-        console.log("Game Over");
     }
 }

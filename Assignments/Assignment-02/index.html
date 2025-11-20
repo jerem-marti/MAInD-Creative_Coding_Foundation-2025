@@ -15,12 +15,31 @@
       <section id="home-section">
 
       </section>
-      <section id="username-section">
 
+      <section id="new-game-section">
+        <h2 id="new-game-title">New Game</h2>
+        <form id="new-game-form">
+          <fieldset id="new-game-mode-fieldset">
+            <legend id="new-game-mode-legend">Select Game Mode:</legend>
+            <div id="game-mode-options">
+              <label for="single-player">Single Player</label>
+              <input type="radio" id="single-player" name="game-mode" value="single-player" checked />
+              <label for="two-players">Two Players</label>
+              <input type="radio" id="two-players" name="game-mode" value="two-players" />
+            </div>
+          </fieldset>
+          <label for="player1-username">Player 1 Username:</label>
+          <input type="text" id="player1-username" name="player1-username" required />
+          <label for="player2-username">Player 2 Username:</label>
+          <input type="text" id="player2-username" name="player2-username" required />
+          <button id="start-game-button" type="button">Start Game</button>
+        </form>
       </section>
+
       <section id="history-section">
 
       </section>
+      
       <section id="game-section">
         <canvas></canvas>
       </section>

@@ -17,4 +17,10 @@ const displaySection = (id) => {
     document.querySelector(`#${id}-section`)?.classList.add('active');
 };
 
-export {displaySection};
+// create a function who simulate query params parsing from hash
+const getQueryParamsFromHash = () => {
+    const queryString = window.location.hash.split('?')[1] || '';
+    return new URLSearchParams(queryString);
+};
+
+export {displaySection, getQueryParamsFromHash};
