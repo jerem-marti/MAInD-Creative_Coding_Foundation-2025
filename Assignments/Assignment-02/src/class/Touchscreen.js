@@ -1,6 +1,24 @@
+/**
+ * A class for managing touchscreen input by tracking active touches.
+ * Prevents default touch behaviors like scrolling, pinch zooming, and trackpad zooming.
+ * Uses a Map data structure to efficiently track multiple simultaneous touches.
+ * 
+ * @class Touchscreen
+ */
 export default class Touchscreen {
 
+    /**
+     * Creates a new Touchscreen instance and initializes touch event listeners.
+     * Sets up prevention for gesture-based zoom and wheel-based zoom.
+     * 
+     * @constructor
+     */
     constructor() {
+        /**
+         * Map containing all currently active touches, indexed by touch identifier.
+         * Each touch object contains x and y client coordinates.
+         * @type {Map<number, {x: number, y: number}>}
+         */
         this.touches = new Map();
         this.init();
         // Prevent pinch zooming with gestures
@@ -26,7 +44,20 @@ export default class Touchscreen {
         }, {passive: false});
     }
 
+    /**
+     * Initializes touch event listeners to track touch interactions.
+     * Listens for touchstart, touchmove, touchend, and touchcancel events to manage active touches.
+     * Prevents default behavior on all touch events to avoid scrolling and other unwanted interactions.
+     * 
+     * @method init
+     */
     init() {
+        /**
+         * Handles touchstart events.
+         * Adds each new touch to the touches Map with its identifier and initial position.
+         * 
+         * @param {TouchEvent} event - The touchstart event containing new touches
+         */
         document.addEventListener('touchstart', event => {
             for (const touch of event.changedTouches) {
                 this.touches.set(touch.identifier, {
@@ -38,6 +69,12 @@ export default class Touchscreen {
             event.preventDefault();
         }, {passive: false});
 
+        /**
+         * Handles touchmove events.
+         * Updates the position of existing touches in the touches Map.
+         * 
+         * @param {TouchEvent} event - The touchmove event containing updated touch positions
+         */
         document.addEventListener('touchmove', event => {
             for (const touch of event.changedTouches) {
                 this.touches.set(touch.identifier, {
@@ -48,6 +85,13 @@ export default class Touchscreen {
             // Prevent default to avoid scrolling
             event.preventDefault();
         }, {passive: false});
+        
+        /**
+         * Handles touchend events.
+         * Removes touches that have ended from the touches Map.
+         * 
+         * @param {TouchEvent} event - The touchend event containing ended touches
+         */
         document.addEventListener('touchend', event => {
             for (const touch of event.changedTouches) {
                 this.touches.delete(touch.identifier);
@@ -55,6 +99,14 @@ export default class Touchscreen {
             // Prevent default to avoid scrolling
             event.preventDefault();
         });
+        
+        /**
+         * Handles touchcancel events.
+         * Removes cancelled touches from the touches Map.
+         * Touchcancel occurs when a touch is interrupted (e.g., by system UI).
+         * 
+         * @param {TouchEvent} event - The touchcancel event containing cancelled touches
+         */
         document.addEventListener('touchcancel', event => {
             for (const touch of event.changedTouches) {
                 this.touches.delete(touch.identifier);

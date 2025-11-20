@@ -43,8 +43,23 @@ const PLAYER_NAME_2_ORIENTATION = "down";
 
 const WIN_SCORE = 15;
 
-
+/**
+ * Main game class that manages the Pong game logic, rendering, and user interactions.
+ * Handles game setup, player inputs (keyboard and touchscreen), physics updates,
+ * collision detection, scoring, and screen orientation changes.
+ * 
+ * @class PongGame
+ */
 export default class PongGame {
+    /**
+     * Creates a new PongGame instance and initializes all game components.
+     * Sets up the canvas, players, paddles, balls, UI elements, and game loop.
+     * 
+     * @constructor
+     * @param {Player} [player1="Player 1"] - The first player instance
+     * @param {Player} [player2="Player 2"] - The second player instance
+     * @param {string} [mode="Single Player"] - The game mode (currently unused)
+     */
     constructor(player1 = "Player 1", player2 = "Player 2", mode = "Single Player") {
         //Players
         this.player1 = player1;
@@ -224,18 +239,43 @@ export default class PongGame {
         });
     }
 
+    /**
+     * Starts the game loop.
+     * 
+     * @method start
+     */
     start() {
         MainLoop.start();
     }
 
+    /**
+     * Stops the game loop.
+     * 
+     * @method stop
+     */
     stop() {
         MainLoop.stop();
     }
 
+    /**
+     * Sets a callback function to be executed when the game ends.
+     * 
+     * @method onEnded
+     * @param {Function} callback - The function to call when the game ends
+     */
     onEnded(callback) {
         this.onEndedFunction = callback;
     }
 
+    /**
+     * Creates a paddle (Rectangle) with specified position and parameters.
+     * 
+     * @method createPaddle
+     * @param {number} x - The x-coordinate relative to the reference point
+     * @param {number} y - The y-coordinate relative to the reference point
+     * @param {Object} posParam - Position parameters for the paddle
+     * @returns {Rectangle} A new paddle instance
+     */
     createPaddle(x, y, posParam) {
         return new Rectangle({
             x: x,
@@ -247,6 +287,14 @@ export default class PongGame {
         });
     }
 
+    /**
+     * Creates a ball (RectangleBouncy) with a random initial direction.
+     * 
+     * @method createBall
+     * @param {number} x - The x-coordinate of the ball
+     * @param {number} y - The y-coordinate of the ball
+     * @returns {RectangleBouncy} A new ball instance
+     */
     createBall(x, y) {
         return new RectangleBouncy({
             x: x,
@@ -261,11 +309,23 @@ export default class PongGame {
         });
     }
 
+    /**
+     * Clears and refreshes the canvas to match the current client dimensions.
+     * 
+     * @method clearAndRefreshCanvas
+     */
     clearAndRefreshCanvas() {
         this.ctx.canvas.width = this.ctx.canvas.clientWidth;
         this.ctx.canvas.height = this.ctx.canvas.clientHeight;
     }
 
+    /**
+     * Gets the logical canvas dimensions, accounting for screen orientation.
+     * Swaps width and height when in portrait mode.
+     * 
+     * @method getCanvasSize
+     * @returns {Object} Object containing width and height properties
+     */
     getCanvasSize() {
         return {
             width: this.screenOrientation === "portrait" ? this.ctx.canvas.height : this.ctx.canvas.width,
@@ -273,6 +333,12 @@ export default class PongGame {
         };
     }
 
+    /**
+     * Updates the positions of multiple canvas elements when the canvas size changes.
+     * 
+     * @method updateElementPosRelativeToCanvas
+     * @param {...CanvasElement} elements - Variable number of canvas elements to update
+     */
     updateElementPosRelativeToCanvas(...elements) {
         let dx, dy;
         if(this.screenOrientation === "portrait") {
@@ -287,6 +353,12 @@ export default class PongGame {
         }
     }
 
+    /**
+     * Gets paddle movement input from keyboard, accounting for screen orientation.
+     * 
+     * @method getPaddleKeyboardMvt
+     * @returns {Object} Object with paddle1Mvt and paddle2Mvt properties (-1: up, 1: down, 0: no movement)
+     */
     getPaddleKeyboardMvt() {
         let paddle1Mvt = 0; // Movement for paddle 1 (-1: up, 1: down, 0: no movement)
         let paddle2Mvt = 0; // Movement for paddle 2 (-1: up, 1: down, 0: no movement)
@@ -308,6 +380,12 @@ export default class PongGame {
         return {paddle1Mvt, paddle2Mvt};
     }
 
+    /**
+     * Gets paddle position input from touchscreen, accounting for screen orientation.
+     * 
+     * @method getPaddleTouchscreenMvt
+     * @returns {Object} Object with paddle1Position and paddle2Position properties (pixel coordinates or undefined)
+     */
     getPaddleTouchscreenMvt() {
         let paddle1Position;
         let paddle2Position;
@@ -341,6 +419,15 @@ export default class PongGame {
         return {paddle1Position, paddle2Position};
     }
 
+    /**
+     * Applies movement input to a paddle from either keyboard or touchscreen.
+     * 
+     * @method applyMvtToPaddle
+     * @param {Rectangle} paddle - The paddle to move
+     * @param {Object} mvt - Movement input object
+     * @param {number} mvt.keyboard - Keyboard movement direction (-1, 0, or 1)
+     * @param {number} [mvt.touchscreen] - Touchscreen position in pixels (optional)
+     */
     applyMvtToPaddle(paddle, mvt) {
         if (mvt.keyboard !== 0) {
                 paddle.setSpeed(0, mvt.keyboard * PADDLE_SPEED);
@@ -352,6 +439,14 @@ export default class PongGame {
             }
     }
 
+    /**
+     * Updates paddle positions and handles canvas collision for both paddles.
+     * 
+     * @method updatePaddlesPosition
+     * @param {number} dt - Delta time since last update
+     * @param {number} gameWidth - Logical game width in pixels
+     * @param {number} gameHeight - Logical game height in pixels
+     */
     updatePaddlesPosition(dt, gameWidth, gameHeight) {
         for (let paddle of [this.paddle1, this.paddle2]) {
             paddle.move(dt);
@@ -359,6 +454,16 @@ export default class PongGame {
         }
     }
 
+    /**
+     * Updates ball positions, handles collisions, and manages scoring.
+     * Removes balls that go off the left or right edges and awards points.
+     * 
+     * @method updateBallsPosition
+     * @param {number} dt - Delta time since last update
+     * @param {number} gameWidth - Logical game width in pixels
+     * @param {number} gameHeight - Logical game height in pixels
+     * @param {RectangleBouncy[]} balls - Array of ball instances to update
+     */
     updateBallsPosition(dt, gameWidth, gameHeight, balls) {
         for (let i = 0; i < balls.length; i++) {
             let ball = balls[i];
@@ -376,6 +481,13 @@ export default class PongGame {
         }
     }
 
+    /**
+     * Increments a player's score and checks for win condition.
+     * If player reaches WIN_SCORE, ends the game. Otherwise, plays sound and spawns new ball.
+     * 
+     * @method incrementPlayerScore
+     * @param {Player} player - The player whose score should be incremented
+     */
     incrementPlayerScore(player) {
         player.incrementScore();
         if (player.getScore() >= WIN_SCORE) {
@@ -392,6 +504,11 @@ export default class PongGame {
         }
     }
 
+    /**
+     * Ends the game, saves results to history, plays win sound, and calls the onEnded callback.
+     * 
+     * @method endGame
+     */
     endGame() {
         this.stop();
         addGameResultToHistory(this.player1.getName(), this.player1.getScore(), this.player2.getName(), this.player2.getScore(), this.mode);
