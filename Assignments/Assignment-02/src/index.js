@@ -4,8 +4,14 @@
  */
 import {displaySection, getQueryParamsFromHash} from './utils/navigation.js';
 import {displayGame} from './section/game.js';
-import {displayNewGame} from './section/newGame.js';
+import {displayNewGame} from './section/newGame.js'
+import {displayEndGame} from './section/endGame.js';
+import { initializeHistory } from './utils/historyManager.js';
 
+// Initialize history from local storage
+initializeHistory();
+
+// Router function to handle hash changes
 const router = () => {
     
     const queryParams = getQueryParamsFromHash();
@@ -17,7 +23,7 @@ const router = () => {
             break;
         case '#new-game':
             displaySection('new-game');
-
+            displayNewGame();
             break;
         case '#history':
             displaySection('history');
@@ -30,10 +36,13 @@ const router = () => {
             displaySection('game');
             displayGame(player1, player2, mode);
             break;
+        case '#end-game':
+            displaySection('end-game');
+            displayEndGame();
+            break;
         default:
             // If the hash does not match any section, display the home section
-            window.location.hash = '#game';
-            displaySection('game');
+            window.location.hash = '#new-game';
     }
 };
 

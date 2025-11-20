@@ -8,13 +8,14 @@ import Audio from '../utils/audio.js';
 import LineDotted from './LineDotted.js';
 import Scoreboard from './Scoreboard.js';
 import Text from './Text.js';
+import { addGameResultToHistory } from '../utils/historyManager.js';
 
 const PADDLE_POSITION_OFFSET = 50;
 const PADDLE_WIDTH = 16;
 const PADDLE_HEIGHT = 80;
 const PADDLE_MASS = 5;
-const PADDLE_1_RELATIVE_TO = "center-left";
-const PADDLE_2_RELATIVE_TO = "center-right";
+const PADDLE_1_RELATIVE_TO = "center-right";
+const PADDLE_2_RELATIVE_TO = "center-left";
 
 const PADDLE_SPEED = 15;
 const PADDLE_ACCELERATION = 10;
@@ -35,8 +36,12 @@ const SCOREBOARD_GAP = 40;
 const TEXT_MARGIN = 10;
 const PLAYER_NAME_FONT = '20px Handjet, Arial';
 const PLAYER_NAME_COLOR = 'grey';
+const PLAYER_NAME_1_RELATIVE_TO = "bottom-right";
+const PLAYER_NAME_1_ORIENTATION = "up";
+const PLAYER_NAME_2_RELATIVE_TO = "top-left";
+const PLAYER_NAME_2_ORIENTATION = "down";
 
-const WIN_SCORE = 15;
+const WIN_SCORE = 2;
 
 
 export default class PongGame {
@@ -44,6 +49,9 @@ export default class PongGame {
         //Players
         this.player1 = player1;
         this.player2 = player2;
+
+        //Game mode
+        this.mode = mode;
 
         //Create a canvas and set its size to the size of the window
         this.ctx = document.querySelector('canvas').getContext('2d');
@@ -99,26 +107,29 @@ export default class PongGame {
             x: TEXT_MARGIN,
             y: TEXT_MARGIN,
             posParam: {
-                relativeTo: 'top-left',
+                relativeTo: PLAYER_NAME_1_RELATIVE_TO,
                 canvasSize: canvasSize,
-                orientation: "down"
-            },
-            font: PLAYER_NAME_FONT,
-            color: PLAYER_NAME_COLOR,
-            text: this.player2.getName()
-        });
-        this.player2NameText = new Text({
-            x: TEXT_MARGIN,
-            y: TEXT_MARGIN,
-            posParam: {
-                relativeTo: 'bottom-right',
-                canvasSize: canvasSize,
-                orientation: "up"
+                orientation: PLAYER_NAME_1_ORIENTATION
             },
             font: PLAYER_NAME_FONT,
             color: PLAYER_NAME_COLOR,
             text: this.player1.getName()
         });
+        this.player2NameText = new Text({
+            x: TEXT_MARGIN,
+            y: TEXT_MARGIN,
+            posParam: {
+                relativeTo: PLAYER_NAME_2_RELATIVE_TO,
+                canvasSize: canvasSize,
+                orientation: PLAYER_NAME_2_ORIENTATION
+            },
+            font: PLAYER_NAME_FONT,
+            color: PLAYER_NAME_COLOR,
+            text: this.player2.getName()
+        });
+
+        //Fallback store for end of game
+        this.onEndedFunction = null;
 
         //Main loop setup
         MainLoop.setUpdate((dt) => {
@@ -128,6 +139,10 @@ export default class PongGame {
                 //Reset paddles position relative to canvas
                 this.paddle1.setPositionRelativeToCanvas(PADDLE_POSITION_OFFSET, 0, { relativeTo: PADDLE_1_RELATIVE_TO, canvasSize: this.getCanvasSize()});
                 this.paddle2.setPositionRelativeToCanvas(PADDLE_POSITION_OFFSET, 0, {relativeTo: PADDLE_2_RELATIVE_TO, canvasSize: this.getCanvasSize()});
+                this.middleLine.setPositionRelativeToCanvas(0, 0, { relativeTo: 'top-center', canvasSize: this.getCanvasSize() });
+                this.player1NameText.setPositionRelativeToCanvas(TEXT_MARGIN, TEXT_MARGIN, { relativeTo: 'top-left', canvasSize: this.getCanvasSize(), orientation: "down" });
+                this.player2NameText.setPositionRelativeToCanvas(TEXT_MARGIN, TEXT_MARGIN, { relativeTo: 'bottom-right', canvasSize: this.getCanvasSize(), orientation: "up" });
+                this.scoreboard.setPositionRelativeToCanvas(0, TEXT_MARGIN, { relativeTo: 'top-center', canvasSize: this.getCanvasSize() });
             }
             //Get logical game dimensions (swap if portrait)
             const gameWidth = this.screenOrientation === "portrait" ? this.ctx.canvas.height : this.ctx.canvas.width;
@@ -148,7 +163,7 @@ export default class PongGame {
             this.updateBallsPosition(dt, gameWidth, gameHeight, this.balls);
 
             //Update scoreboard
-            this.scoreboard.updateScore(this.player1.getScore(), this.player2.getScore());
+            this.scoreboard.updateScore(this.player2.getScore(), this.player1.getScore());
         });
 
         //Draw loop setup
@@ -217,8 +232,8 @@ export default class PongGame {
         MainLoop.stop();
     }
 
-    reset() {
-        //reset game state here
+    onEnded(callback) {
+        this.onEndedFunction = callback;
     }
 
     createPaddle(x, y, posParam) {
@@ -276,19 +291,19 @@ export default class PongGame {
         let paddle1Mvt = 0; // Movement for paddle 1 (-1: up, 1: down, 0: no movement)
         let paddle2Mvt = 0; // Movement for paddle 2 (-1: up, 1: down, 0: no movement)
         if(this.screenOrientation === "portrait") {
-            //Keyboard input for paddle 1 (A/D keys)
-            if (this.keyboard.isDown('KeyD')) paddle1Mvt = -1;
-            else if (this.keyboard.isDown('KeyA')) paddle1Mvt = 1;
-            //Keyboard input for paddle 2 (left/right arrows)
-            if (this.keyboard.isDown('ArrowRight')) paddle2Mvt = -1;
-            else if (this.keyboard.isDown('ArrowLeft')) paddle2Mvt = 1;
+            //Keyboard input for paddle 2 (A/D keys)
+            if (this.keyboard.isDown('KeyD')) paddle2Mvt = -1;
+            else if (this.keyboard.isDown('KeyA')) paddle2Mvt = 1;
+            //Keyboard input for paddle 1 (left/right arrows)
+            if (this.keyboard.isDown('ArrowRight')) paddle1Mvt = -1;
+            else if (this.keyboard.isDown('ArrowLeft')) paddle1Mvt = 1;
         } else {
-            //Keyboard input for paddle 1 (W/S keys)
-            if (this.keyboard.isDown('KeyW')) paddle1Mvt = -1;
-            else if (this.keyboard.isDown('KeyS')) paddle1Mvt = 1;
-            //Keyboard input for paddle 2 (up/down arrows)
-            if (this.keyboard.isDown('ArrowUp')) paddle2Mvt = -1;
-            else if (this.keyboard.isDown('ArrowDown')) paddle2Mvt = 1;
+            //Keyboard input for paddle 2 (W/S keys)
+            if (this.keyboard.isDown('KeyW')) paddle2Mvt = -1;
+            else if (this.keyboard.isDown('KeyS')) paddle2Mvt = 1;
+            //Keyboard input for paddle 1 (up/down arrows)
+            if (this.keyboard.isDown('ArrowUp')) paddle1Mvt = -1;
+            else if (this.keyboard.isDown('ArrowDown')) paddle1Mvt = 1;
         }
         return {paddle1Mvt, paddle2Mvt};
     }
@@ -298,25 +313,25 @@ export default class PongGame {
         let paddle2Position;
         for (const touch of this.touchscreen.touches.values()) {
             if(this.screenOrientation === "portrait") {
-                //Top side of the screen controls paddle 1
-                if (touch.y < window.innerHeight / 2 && paddle1Position === undefined) {
-                    paddle1Position = window.innerWidth - touch.x;
-                } 
-                //Bottom side of the screen controls paddle 2
-                else if (touch.y >= window.innerHeight / 2 && paddle2Position === undefined) {
+                //Top side of the screen controls paddle 2
+                if (touch.y < window.innerHeight / 2 && paddle2Position === undefined) {
                     paddle2Position = window.innerWidth - touch.x;
+                } 
+                //Bottom side of the screen controls paddle 1
+                else if (touch.y >= window.innerHeight / 2 && paddle1Position === undefined) {
+                    paddle1Position = window.innerWidth - touch.x;
                 }
                 else {
                     break;
                 }
             } else {
-                //Left side of the screen controls paddle 1
-                if (touch.x < window.innerWidth / 2 && paddle1Position === undefined) {
-                    paddle1Position = touch.y;
-                } 
-                //Right side of the screen controls paddle 2
-                else if (touch.x >= window.innerWidth / 2 && paddle2Position === undefined) {
+                //Left side of the screen controls paddle 2
+                if (touch.x < window.innerWidth / 2 && paddle2Position === undefined) {
                     paddle2Position = touch.y;
+                } 
+                //Right side of the screen controls paddle 1
+                else if (touch.x >= window.innerWidth / 2 && paddle1Position === undefined) {
+                    paddle1Position = touch.y;
                 }
                 else {
                     break;
@@ -353,8 +368,8 @@ export default class PongGame {
                 // Remove array element
                 balls.splice(i, 1);
                 i--; // Adjust index after removal
-                if(collisionSide === 'left') this.incrementPlayerScore(this.player2);
-                else this.incrementPlayerScore(this.player1);
+                if(collisionSide === 'left') this.incrementPlayerScore(this.player1);
+                else this.incrementPlayerScore(this.player2);
             }
             ball.rectangleCollision(this.paddle1, BALL_BOUNCINESS);
             ball.rectangleCollision(this.paddle2, BALL_BOUNCINESS);
@@ -362,7 +377,9 @@ export default class PongGame {
     }
 
     incrementPlayerScore(player) {
+        console.log("Point for " + player.getName());
         player.incrementScore();
+        console.log("New score: " + player.getScore());
         if (player.getScore() >= WIN_SCORE) {
             this.endGame(player);
         } else {
@@ -379,6 +396,7 @@ export default class PongGame {
 
     endGame() {
         this.stop();
-        Audio.playWinSound();
+        addGameResultToHistory(this.player1.getName(), this.player1.getScore(), this.player2.getName(), this.player2.getScore(), this.mode);
+        Audio.playWinSound(this.onEndedFunction());
     }
 }

@@ -12,34 +12,36 @@ const atariAudioWin = new Audio(atariWinMP3);
 const atariAudioLosePoint = new Audio(atariLosePointMP3);
 const atariAudioLose = new Audio(atariLoseMP3);
 
+const playOnce = (audio, callback) => {
+    audio.currentTime = 0;
+    audio.play();
+    if (callback) {
+        audio.onended = callback;
+    }
+};
+
 export default {
-    playButtonSound() {
-        atariAudioButton.currentTime = 0;
-        atariAudioButton.play();
+    playButtonSound(callback = null) {
+        playOnce(atariAudioButton, callback);
     },
 
-    playPaddleHitSound() {
-        atariAudioPaddleHit.currentTime = 0;
-        atariAudioPaddleHit.play();
+    playPaddleHitSound(callback = null) {
+        playOnce(atariAudioPaddleHit, callback);
     },
 
-    playWinPointSound() {
-        atariAudioWinPoint.currentTime = 0;
-        atariAudioWinPoint.play();
+    playWinPointSound(callback = null) {
+        playOnce(atariAudioWinPoint, callback);
     },
 
-    playWinSound() {
-        atariAudioWin.currentTime = 0;
-        atariAudioWin.play();
+    playWinSound(callback = null) {
+        playOnce(atariAudioWin, callback);
     },
 
-    playLosePointSound() {
-        atariAudioLosePoint.currentTime = 0;
-        atariAudioLosePoint.play();
+    playLosePointSound(callback = null) {
+        playOnce(atariAudioLosePoint, callback);
     },
 
-    playLoseSound() {
-        atariAudioLose.currentTime = 0;
-        atariAudioLose.play();
+    playLoseSound(callback = null) {
+        playOnce(atariAudioLose, callback);
     }
 };

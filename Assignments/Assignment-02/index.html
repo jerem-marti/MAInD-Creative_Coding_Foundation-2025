@@ -23,9 +23,9 @@
             <legend id="new-game-mode-legend">Select Game Mode:</legend>
             <div id="game-mode-options">
               <label for="single-player">Single Player</label>
-              <input type="radio" id="single-player" name="game-mode" value="single-player" checked />
+              <input type="radio" id="single-player" name="game-mode" value="Single Player" checked />
               <label for="two-players">Two Players</label>
-              <input type="radio" id="two-players" name="game-mode" value="two-players" />
+              <input type="radio" id="two-players" name="game-mode" value="Two Players" />
             </div>
           </fieldset>
           <label for="player1-username">Player 1 Username:</label>
@@ -39,9 +39,29 @@
       <section id="history-section">
 
       </section>
-      
+
       <section id="game-section">
         <canvas></canvas>
+      </section>
+
+      <section id="end-game-section">
+        <h2 id="end-game-title">Game Over</h2>
+        <p id="end-game-winner-text"></p>
+        <p id="end-game-result">
+          <div id="end-game-player1" class="winner">
+            <span id="end-game-player1-username">Player 1</span>
+            <span>: </span>
+            <span id="end-game-player1-result">15</span>
+          </div>
+          <span id="end-game-scores-separator"> — </span>
+          <div id="end-game-player2" class="loser">
+            <span id="end-game-player2-username">Player 2</span>
+            <span> :</span>
+            <span id="end-game-player2-result">10</span>
+          </div>
+        </p>
+        <button id="end-game-play-again-button" type="button">Play Again</button>
+        <button id="end-game-return-home-button" type="button">Return to home</button>
       </section>
     </main>
     

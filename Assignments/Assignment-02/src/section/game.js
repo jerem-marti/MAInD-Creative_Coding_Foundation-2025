@@ -9,6 +9,10 @@ const displayGame = (player1Name = "Player 1", player2Name = "Player 2", mode = 
     const player2 = new Player(player2Name);
     
     pongGame = new PongGame(player1, player2, mode);
+    pongGame.onEnded(() => {
+        console.log("Go to end game screen");
+        window.location.hash = '#end-game'; 
+    });
     pongGame.start();
 };
 
