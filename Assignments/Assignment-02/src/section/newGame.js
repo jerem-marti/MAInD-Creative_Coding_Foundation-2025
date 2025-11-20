@@ -1,8 +1,8 @@
 const title = document.querySelector('#new-game-title');
+const form = document.querySelector('#new-game-form');
 const player1Input = document.querySelector('#player1-username');
 const player2Input = document.querySelector('#player2-username');
 // const gameModeOptions = document.getElementsByName('game-mode');
-const startGameButton = document.querySelector('#start-game-button');
 
 const displayNewGame = () => {
     // Reset form fields
@@ -12,9 +12,18 @@ const displayNewGame = () => {
     // gameModeOptions[0].checked = true; // Default to first option
 };
 
-startGameButton.addEventListener('click', () => {
-    const player1Name = player1Input.value.trim() || 'Player 1';
-    const player2Name = player2Input.value.trim() || 'Player 2';
+form.addEventListener('submit', (e) => {
+    e.preventDefault(); // Prevent default form submission
+
+    const player1Name = player1Input.value.trim();
+    const player2Name = player2Input.value.trim();
+
+    // Browser validation will handle required and minlength/maxlength
+    // But we can add additional custom validation if needed
+    if (player1Name === '' || player2Name === '') {
+        return; // This shouldn't happen due to required attribute
+    }
+
     let selectedGameMode = 'Single Player';
     // for (const option of gameModeOptions) {
     //     if (option.checked) {

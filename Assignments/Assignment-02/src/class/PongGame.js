@@ -41,7 +41,7 @@ const PLAYER_NAME_1_ORIENTATION = "up";
 const PLAYER_NAME_2_RELATIVE_TO = "top-left";
 const PLAYER_NAME_2_ORIENTATION = "down";
 
-const WIN_SCORE = 15;
+const WIN_SCORE = 2;
 
 
 export default class PongGame {

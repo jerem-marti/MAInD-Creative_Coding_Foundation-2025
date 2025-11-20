@@ -11,13 +11,13 @@
     <header>
       <a href="#home" id="header-logo"><h1>Pong Game</h1></a>
       <div id="header-buttons-container">
+        <a href="#home" id="header-home-link" class="button">Home</a>
         <a href="#new-game" id="header-new-game-link" class="button">New Game</a>
         <a href="#history" id="header-history-link" class="button">History</a>
       </div>
     </header>
     <main>
       <section id="home-section">
-        <h1 id="home-title">Pong Game</h1>
         <p id="home-history-text">
           Pong is one of the earliest arcade video games, originally released by Atari in 1972. 
           Created by Allan Alcorn, it became a cultural phenomenon and helped establish the video game industry. 
@@ -34,12 +34,12 @@
         </p>
         <h3 id="home-rules-list-title">Rules cheat sheet</h3>
         <ul id="home-rules-list">
-          <li>Score points by making the ball pass your opponent's paddle.</li>
-          <li>The first player to reach 15 points wins the game.</li>
-          <li>The ball bounces off paddles and screen edges.</li>
-          <li>The ball gets the inertia of the paddle it hits.</li>
-          <li>The ball accelerates slightly after each paddle hit.</li>
-          <li>Players can control their paddles using keyboard or touch input.</li>
+            <li><strong>Score points</strong> by making the ball pass your opponent's paddle.</li>
+            <li>The first player to <strong>15 points</strong> wins the game.</li>
+            <li>The ball <strong>bounces</strong> off paddles and screen edges.</li>
+            <li>The ball gets the <strong>inertia</strong> of the paddle it hits.</li>
+            <li>The ball <strong>accelerates</strong> slightly after each paddle hit.</li>
+            <li>Players can control their paddles using <strong>keyboard</strong> or <strong>touch</strong> input.</li>
         </ul>
       </section>
 
@@ -55,11 +55,11 @@
               <input type="radio" id="two-players" name="game-mode" value="Two Players" />
             </div>
           </fieldset> -->
-          <label for="player1-username">Player 1 Username:</label>
-          <input type="text" id="player1-username" name="player1-username" required />
-          <label for="player2-username">Player 2 Username:</label>
-          <input type="text" id="player2-username" name="player2-username" required />
-          <button id="start-game-button" type="button">Start Game</button>
+          <label for="player1-username">Player 1 Username: <span>(Required and maximum 8 characters)</span></label>
+          <input type="text" id="player1-username" name="player1-username" minlength="1" maxlength="8" required />
+          <label for="player2-username">Player 2 Username: <span>(Required and maximum 8 characters)</span></label>
+          <input type="text" id="player2-username" name="player2-username" minlength="1" maxlength="8" required />
+          <button id="start-game-button" type="submit">Start Game</button>
         </form>
       </section>
 
@@ -78,21 +78,12 @@
       <section id="end-game-section">
         <h2 id="end-game-title">Game Over</h2>
         <p id="end-game-winner-text"></p>
-        <p id="end-game-result">
-          <div id="end-game-player1" class="winner">
-            <span id="end-game-player1-username">Player 1</span>
-            <span>: </span>
-            <span id="end-game-player1-result">15</span>
-          </div>
-          <span id="end-game-scores-separator"> — </span>
-          <div id="end-game-player2" class="loser">
-            <span id="end-game-player2-username">Player 2</span>
-            <span> :</span>
-            <span id="end-game-player2-result">10</span>
-          </div>
-        </p>
+        <div id="end-game-result">
+            <span id="end-game-player1-username" class="winner">Player 1</span>
+            <span id="end-game-score">( 15 : 2 )</span>
+            <span id="end-game-player2-username" class="loser">Player 2</span>
+        </div>
         <button id="end-game-play-again-button" type="button">Play Again</button>
-        <a id="end-game-return-home-link" class="button" href="#home">Return to home</a>
       </section>
     </main>
     <footer>
