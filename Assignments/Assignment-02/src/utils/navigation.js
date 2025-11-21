@@ -1,13 +1,16 @@
 /**
- * @file Helper functions for navigation.
+ * @fileoverview Navigation utility module for managing single-page application routing.
+ * This module provides functions to handle section visibility toggling and URL hash
+ * query parameter parsing for navigation within the Pong game application.
  */
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Navigation helper functions
-
 /**
- * Activate the section corresponding to the given id and hide the others.
- * @param {*} id 
+ * Activates the section corresponding to the given ID and hides all others.
+ * Removes the 'active' class from all currently active sections and adds it to the
+ * target section. If no section matches the provided ID, no section will be active.
+ * 
+ * @function displaySection
+ * @param {string} id - The ID prefix of the section to display (e.g., 'home' for '#home-section')
  */
 const displaySection = (id) => {
     // Hide the currently active section if any
@@ -17,10 +20,27 @@ const displaySection = (id) => {
     document.querySelector(`#${id}-section`)?.classList.add('active');
 };
 
-// create a function who simulate query params parsing from hash
+/**
+ * Parses query parameters from the URL hash.
+ * Extracts the query string portion after '?' in the hash and returns a URLSearchParams object.
+ * If no query string is present, returns an empty URLSearchParams object.
+ * 
+ * @function getQueryParamsFromHash
+ * @returns {URLSearchParams} A URLSearchParams object containing the parsed query parameters
+ * @example
+ * // URL: #game?player1=Alice&player2=Bob
+ * const params = getQueryParamsFromHash();
+ * params.get('player1'); // 'Alice'
+ * params.get('player2'); // 'Bob'
+ */
 const getQueryParamsFromHash = () => {
     const queryString = window.location.hash.split('?')[1] || '';
     return new URLSearchParams(queryString);
 };
 
+/**
+ * Exported navigation utility functions.
+ * @exports displaySection - Displays a specific section and hides others
+ * @exports getQueryParamsFromHash - Parses query parameters from URL hash
+ */
 export {displaySection, getQueryParamsFromHash};

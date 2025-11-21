@@ -2,10 +2,22 @@
 /* html body */
 
 /* Make sure the html and body take the full height of the viewport */
-html, body {
-  width: 100dvw;
-  height: 100dvh;
+html {
+  width: 100%;
   background-color: var(--bg-color);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: var(--app-padding);
+  height: 100dvh;
+}
+
+:focus {
+  outline: 0.1rem solid var(--primary-color);
 }
 
 /* --------------------------------------------------------------------------------- */
@@ -13,15 +25,21 @@ html, body {
 
 header {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 1rem;
 }
 
-h1 {
+#header-logo {
+  text-decoration: none;
+}
+#header-logo h1 {
+  margin: 0;
+}
+body:has(#home-section:not(.active)) #header-logo h1 {
     visibility: hidden;
     position: absolute;
     left: 0;
@@ -33,20 +51,43 @@ h1 {
     margin-top: -1px;
 }
 
+body:has(#home-section.active) #header-home-link {
+    display: none;
+}
+body:has(#history-section.active) #header-history-link {
+    display: none;
+}
+body:has(#new-game-section.active) #header-new-game-link {
+    display: none;
+}
+
+#header-buttons-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body:has(#game-section.active) header,
+body:has(#game-section.active) footer {
+  display: none;
+}
+
 /* --------------------------------------------------------------------------------- */
 /* main */
 
 main {
+  width: 100%;
   flex-grow: 1;
-  padding: var(--app-padding);
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
 }
 
 main section {
   flex-direction: column;
   display: none;
+  flex-grow: 1;
   margin: auto;
   margin-top: 0;
   width: 100%;
@@ -60,3 +101,214 @@ main section.active {
     align-items: flex-start;
     height: auto;
 }
+
+/* --------------------------------------------------------------------------------- */
+/* canvas */
+canvas {   
+  display: block;
+  width: calc(100dvw - 2*var(--app-padding));
+  height: calc(100dvh - 2*var(--app-padding));
+}
+
+main:has(#game-section:not(.active)) canvas {
+  display: none;
+}
+
+/* ----------------------------------------------------------------------------- */---- */
+/* lists */
+ul, ol {
+  padding-left: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+/* --------------------------------------------------------------------------------- */
+/* footer */
+footer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--border-color);
+  margin-top: max(1rem, auto);
+}
+
+/* --------------------------------------------------------------------------------- */
+/* home section */
+#home-section.active {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#home-play-link {
+  margin-top: 1.2rem;
+  align-self: stretch;
+}
+
+/* --------------------------------------------------------------------------------- */
+/* history section */
+#history-section.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#history-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+#history-list li {
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.2rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#history-list li:last-child {
+  border-bottom: none;
+}
+
+#history-list .date {
+  font-size: var(--text-size-footnote);
+  font-weight: var(--font-weight-footnote);
+  margin: 0;
+}
+
+#history-list .score-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+#history-list .score-container > *:nth-child(odd) {
+  flex: 1;
+}
+
+#history-list .score-container > *:nth-child(1) {
+  text-align: right;
+}
+
+#history-list .score-container > *:nth-child(2) {
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+#history-list .score-container > *:nth-child(3) {
+  text-align: left;
+}
+
+#end-game-play-again-button {
+  align-self: stretch;
+}
+
+#history-clear-button {
+  margin-top: 1rem;
+  background-color: red;
+}
+#history-clear-button:hover {
+  background-color: darkred;
+  color: var(--text-color);
+}
+
+/* --------------------------------------------------------------------------------- */
+/* new-game section */
+
+#new-game-form {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: stretch;
+  width: 100%;
+}
+
+#new-game-form input[type="text"] {
+  outline: none;
+  border: none;
+  border-bottom: 0.1rem solid var(--text-color);
+  font-size: var(--text-size-input);
+  background-color: transparent;
+  color: var(--text-color);
+}
+
+#new-game-form label {
+  font-size: var(--text-size-footnote);
+  margin-top: 2rem;
+}
+
+#new-game-form label span {
+  font-size: var(--text-size-footnote);
+  font-weight: var(--font-weight-footnote);
+  color: var(--loser-color);
+  margin-left: 0.5rem;
+}
+
+#start-game-button {
+  margin-top: 2.5rem;
+}
+
+/* --------------------------------------------------------------------------------- */
+/* end-game section */
+#end-game-winner-text {
+  font-size: var(--text-size-h2);
+  margin: 0;
+  margin-top: 4rem;
+}
+
+#end-game-result {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1rem 0 2rem 0;
+  font-size: var(--text-size-h4);
+}
+
+#end-game-result > *:nth-child(odd) {
+  flex: 1;
+}
+
+#end-game-result > *:nth-child(1) {
+  text-align: right;
+}
+
+#end-game-result > *:nth-child(2) {
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+#end-game-result > *:nth-child(3) {
+  text-align: left;
+}
+
+#end-game-play-again-button {
+  align-self: stretch;
+}
+
+/* 
+<section id="end-game-section">
+  <h2 id="end-game-title">Game Over</h2>
+  <p id="end-game-winner-text"></p>
+  <div id="end-game-result">
+      <span id="end-game-player1-username" class="winner">Player 1</span>
+      <span id="end-game-score">( 15 : 2 )</span>
+      <span id="end-game-player2-username" class="loser">Player 2</span>
+  </div>
+  <button id="end-game-play-again-button" type="button">Play Again</button>
+</section>
+*/

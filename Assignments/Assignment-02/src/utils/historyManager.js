@@ -1,7 +1,26 @@
+/**
+ * @fileoverview History manager module for managing Pong game history.
+ * This module provides functionality to store, retrieve, and manage game results
+ * using a Map structure and localStorage persistence. Game records are indexed by
+ * ISO timestamp strings and contain player data (names and scores) and game mode.
+ */
+
 import { getLocalStorageItem, setLocalStorageItem } from './localStorage.js';
 
+/**
+ * Map storing game history records indexed by ISO timestamp strings.
+ * Each record contains player1, player2 objects with name and score, and game mode.
+ * @type {Map<string, {player1: {name: string, score: number}, player2: {name: string, score: number}, mode: string}>}
+ */
 const history = new Map();
 
+/**
+ * Initializes the history Map from localStorage.
+ * Retrieves stored game history and populates the history Map with timestamp keys.
+ * Should be called once at application startup.
+ * 
+ * @function initializeHistory
+ */
 const initializeHistory = () => {
     const storedHistory = getLocalStorageItem('pongGameHistory');
     if (storedHistory) {
@@ -11,20 +30,68 @@ const initializeHistory = () => {
     }
 }
 
+/**
+ * Retrieves all game history records as an array.
+ * Converts the history Map to an array of objects, each containing timestamp and game data.
+ * 
+ * @function getHistory
+ * @returns {Array<{timestamp: string, player1: {name: string, score: number}, player2: {name: string, score: number}, mode: string}>} Array of game history records
+ */
 const getHistory = () => {
     return Array.from(history.entries()).map(([timestamp, record]) => ({ timestamp, ...record }));
 }
 
+/**
+ * Retrieves the most recent game from history.
+ * Returns the last element in the history array, or null if no games exist.
+ * 
+ * @function getLatestGame
+ * @returns {{timestamp: string, player1: {name: string, score: number}, player2: {name: string, score: number}, mode: string}|null} The latest game record or null if history is empty
+ */
 const getLatestGame = () => {
     const historyArray = getHistory();
     return historyArray.length > 0 ? historyArray[historyArray.length - 1] : null;
 }
 
+/**
+ * Saves the current history Map to localStorage.
+ * Converts the Map to an array and persists it using the localStorage utility.
+ * 
+ * @function saveHistory
+ */
 const saveHistory = () => {
     const historyArray = getHistory();
     setLocalStorageItem('pongGameHistory', historyArray);
 }
 
+/**
+ * Clears all game history from both the Map and localStorage.
+ * Removes all entries from the history Map and persists the empty state.
+ * 
+ * @function clearHistory
+ */
+const clearHistory = () => {
+    history.clear();
+    saveHistory();
+};
+
+/**
+ * Adds a new game result to the history.
+ * Creates a new history entry with the current timestamp and provided game data.
+ * Validates that all required data is provided and that scores are numbers.
+ * Validates that the game mode is either 'Single Player' or 'Two Players'.
+ * Automatically saves the updated history to localStorage.
+ * 
+ * @function addGameResultToHistory
+ * @param {string} player1Name - Name of player 1
+ * @param {number} player1Score - Final score of player 1
+ * @param {string} player2Name - Name of player 2
+ * @param {number} player2Score - Final score of player 2
+ * @param {string} mode - Game mode ('Single Player' or 'Two Players')
+ * @throws {Error} If player names or scores are missing
+ * @throws {Error} If scores are not numbers
+ * @throws {Error} If game mode is not 'Single Player' or 'Two Players'
+ */
 const addGameResultToHistory = (player1Name, player1Score, player2Name, player2Score, mode) => {
     if (!player1Name || !player2Name || player1Score === undefined || player2Score === undefined) {
         throw new Error("Both Player1 and Player2 data must be provided.");
@@ -43,4 +110,13 @@ const addGameResultToHistory = (player1Name, player1Score, player2Name, player2S
     saveHistory();
 }
 
-export { addGameResultToHistory, getHistory, getLatestGame, initializeHistory, saveHistory };
+/**
+ * Exported history management functions.
+ * @exports addGameResultToHistory - Adds a game result to history
+ * @exports getHistory - Retrieves all game history
+ * @exports getLatestGame - Retrieves the most recent game
+ * @exports initializeHistory - Initializes history from localStorage
+ * @exports saveHistory - Saves history to localStorage
+ * @exports clearHistory - Clears all history
+ */
+export { addGameResultToHistory, getHistory, getLatestGame, initializeHistory, saveHistory, clearHistory };

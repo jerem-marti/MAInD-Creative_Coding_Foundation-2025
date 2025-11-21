@@ -1,0 +1,27 @@
+button, .button {
+  text-decoration: none;
+  color: var(--text-color);
+  background-color: transparent;
+  padding: 0.2rem 0.8rem;
+  outline: 1px solid var(--text-color);
+  cursor: pointer;
+  font-weight: bold;
+  transition: var(--default-transition);
+  margin: 0.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button:hover, .button:hover {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+}
+
+button:focus, .button:focus {
+  outline: 0.2rem solid var(--primary-color);
+} 
+
+button:active, .button:active {
+  outline: 0.8rem solid var(--primary-color);
+}

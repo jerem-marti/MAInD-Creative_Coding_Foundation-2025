@@ -1,6 +1,31 @@
 import CanvasElement from './CanvasElement.js';
 
+/**
+ * A text element that can be drawn on canvas with customizable orientation and alignment.
+ * Supports rotation in four directions (right, left, up, down) and aligns text based on position reference point.
+ * Extends CanvasElement to inherit position management capabilities.
+ * 
+ * @class Text
+ * @extends CanvasElement
+ */
 export default class Text extends CanvasElement {
+    /**
+     * Creates a new Text instance.
+     * 
+     * @constructor
+     * @param {Object} options - Configuration options for the text element
+     * @param {number} [options.x=0] - The x-coordinate relative to the reference point
+     * @param {number} [options.y=0] - The y-coordinate relative to the reference point
+     * @param {Object} [options.posParam] - Position parameters object
+     * @param {string} [options.posParam.relativeTo='top-left'] - Reference point on canvas
+     * @param {Object} options.posParam.canvasSize - Canvas dimensions
+     * @param {number} [options.posParam.canvasSize.width=0] - Canvas width in pixels
+     * @param {number} [options.posParam.canvasSize.height=0] - Canvas height in pixels
+     * @param {string} [options.posParam.orientation='right'] - Text orientation ('right', 'left', 'up', or 'down')
+     * @param {string} [options.font='20px Arial'] - Font specification for the text
+     * @param {string} [options.color='white'] - Color of the text
+     * @param {string} [options.text=''] - The text content to display
+     */
     constructor({
         x = 0,
         y = 0,
@@ -23,6 +48,13 @@ export default class Text extends CanvasElement {
         this.orientation = posParam.orientation;
     }
 
+    /**
+     * Draws the text on the provided canvas context.
+     * Handles text alignment based on position reference point and applies rotation based on orientation.
+     * 
+     * @method draw
+     * @param {CanvasRenderingContext2D} ctx - The canvas rendering context to draw on
+     */
     draw(ctx) {
         ctx.save();
         

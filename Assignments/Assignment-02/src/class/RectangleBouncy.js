@@ -1,7 +1,32 @@
 import Rectangle from "./Rectangle";
 import audio from "../utils/audio";
 
+/**
+ * A bouncing rectangle with elastic collision physics.
+ * Extends Rectangle to add bounce behavior on collisions with canvas edges and other rectangles.
+ * 
+ * @class RectangleBouncy
+ * @extends Rectangle
+ */
 export default class RectangleBouncy extends Rectangle {
+    /**
+     * Creates a new RectangleBouncy instance.
+     * 
+     * @constructor
+     * @param {Object} options - Configuration options for the bouncy rectangle
+     * @param {number} [options.x=0] - The x-coordinate of the center
+     * @param {number} [options.y=0] - The y-coordinate of the center
+     * @param {number} [options.width=100] - The width of the rectangle in pixels
+     * @param {number} [options.height=100] - The height of the rectangle in pixels
+     * @param {Object} [options.speed] - Initial speed configuration
+     * @param {number} [options.speed.velocity=0] - Initial velocity magnitude
+     * @param {number} [options.speed.angle=0] - Initial direction in radians
+     * @param {number|null} [options.speed.max=null] - Maximum velocity (null for no limit)
+     * @param {Object} [options.acceleration] - Acceleration vector
+     * @param {number} [options.acceleration.x=0] - Acceleration in x-direction
+     * @param {number} [options.acceleration.y=0] - Acceleration in y-direction
+     * @param {string} [options.color='white'] - The fill color of the rectangle
+     */
     constructor({
         x = 0,
         y = 0,
@@ -21,6 +46,17 @@ export default class RectangleBouncy extends Rectangle {
         super({x, y, width, height, speed, acceleration, color});
     }
 
+    /**
+     * Handles collision with canvas boundaries with bounce physics.
+     * When the rectangle hits an edge, it bounces back with velocity reversal.
+     * Returns which side was touched for scoring purposes.
+     * 
+     * @method canvasCollision
+     * @param {number} canvasWidth - The width of the canvas in pixels
+     * @param {number} canvasHeight - The height of the canvas in pixels
+     * @param {number} [bounce=1] - Bounciness factor (1 = perfectly elastic, <1 = energy loss)
+     * @returns {string|null} The side that was touched ('left', 'right', 'top', 'bottom') or null if no collision
+     */
     canvasCollision(canvasWidth, canvasHeight, bounce = 1) {
         let sideTouched = null;
         
@@ -45,6 +81,15 @@ export default class RectangleBouncy extends Rectangle {
         return sideTouched;
     }
 
+    /**
+     * Handles collision with another rectangle with bounce physics and momentum transfer.
+     * Detects collision, bounces the ball, and transfers momentum from the other rectangle.
+     * Plays a sound effect when collision occurs.
+     * 
+     * @method rectangleCollision
+     * @param {Rectangle} Rectangle - The rectangle to check collision with
+     * @param {number} [bounce=1] - Bounciness factor (1 = perfectly elastic, >1 = energy gain)
+     */
     rectangleCollision(Rectangle, bounce = 1) {
         const distanceX = this.distanceXto(Rectangle);
         const distanceY = this.distanceYto(Rectangle);

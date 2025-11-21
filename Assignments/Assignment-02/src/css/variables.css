@@ -1,34 +1,38 @@
 :root {
   /* Typography */
-  --font-family: 'Roboto', sans-serif;
-  --font-size: 20px;
-  --tablet-font-size: 18px;
-  --mobile-font-size: 16px;
+  --font-family: "Handjet", Arial, sans-serif;
+  --font-size: 48px;
+  --tablet-font-size: 36px;
+  --mobile-font-size: 24px;
   --line-height: 1.2;
 
-  --text-size-h2: 3.5rem;
-  --tablet-text-size-h2: 3rem;
-  --mobile-text-size-h2: 2rem;
+  --text-size-h1: 4.2rem;
+  --tablet-text-size-h1: 4.2rem;
+  --mobile-text-size-h1: 3rem;
 
-  --text-size-h3: 3rem;
-  --tablet-text-size-h3: 2.8rem;
+  --text-size-h2: 3rem;
+  --tablet-text-size-h2: 3rem;
+  --mobile-text-size-h2: 2.4rem;
+
+  --text-size-h3: 2.2rem;
+  --tablet-text-size-h3: 2.2rem;
   --mobile-text-size-h3: 1.6rem;
 
-  --text-size-h4: 2.5rem;
-  --tablet-text-size-h4: 2.5rem;
+  --text-size-h4: 1.6rem;
+  --tablet-text-size-h4: 1.6rem;
   --mobile-text-size-h4: 1.2rem;
 
-  --text-size-placeholder: 1.2rem;
+  --text-size-input: 1.2rem;
   --text-size-footnote: 0.8rem;
+  --font-weight-footnote: 300;
   
   /* Colors */
   --primary-color: #0474ff;
-  --primary-color-dark: #002450;
-  --secondary-color: #181818;
   --bg-color: #121212;
   --text-color: #fff;
   --border-color: #272727;
-  --grey-light: #9c9c9c;
+  --winner-color: #7ed979;
+  --loser-color: #ff7e7e;
 
   /* Globals */
   --border-radius: 0.5rem;

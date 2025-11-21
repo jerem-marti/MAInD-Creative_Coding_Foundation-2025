@@ -4,22 +4,78 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Pong Game</title>
+    
+    <!-- Main Stylesheet -->
     <link rel="stylesheet" href="./src/css/index.css" />
+    
+    <!-- Main JavaScript (ES Module) -->
     <script type="module" src="./src/index.js"></script>
   </head>
   <body>
+    <!-- Header -->
     <header>
-      <h1>Pong Game</h1>
+      <!-- Application Title -->
+      <a href="#home" id="header-logo"><h1>Pong Game</h1></a>
+      <!-- Navigation Buttons -->
+      <div id="header-buttons-container">
+        <a href="#home" id="header-home-link" class="button">Home</a>
+        <a href="#new-game" id="header-new-game-link" class="button">New Game</a>
+        <a href="#history" id="header-history-link" class="button">History</a>
+      </div>
     </header>
     <main>
-      <section id="home-section">
+      <!------------------------------------------------------------------------------------------------------------>
 
+      <!-- Add the class "active" to the section to display it -->
+
+      <!------------------------------------------------------------------------------------------------------------>
+
+      <!--
+        Home Section
+        This section displays the game introduction, history, rules, and a link to start a new game.
+      -->
+      <section id="home-section">
+        <!-- Game History Text -->
+        <p id="home-history-text">
+          Pong is one of the earliest arcade video games, originally released by Atari in 1972. 
+          Created by Allan Alcorn, it became a cultural phenomenon and helped establish the video game industry. 
+          The game simulates table tennis, where players control paddles to hit a ball back and forth across the screen.
+        </p>
+        <!-- Play Button -->
+        <a id="home-play-link" class="button" href="#new-game">Play</a>
+        <!-- Game Rules -->
+        <h2 id="home-rules-title">Rules</h2>
+        <p id="home-rules-text">
+          The objective of Pong is to score points by making the ball pass your opponent's paddle. 
+          Each player controls a paddle that can move along their side of the screen. 
+          The ball bounces off the paddles and the top and bottom edges of the screen. 
+          If the ball passes a player's paddle, the opposing player scores a point. 
+          The game continues until a player reaches a 15-point score.
+        </p>
+        <!-- Rules Cheat Sheet -->
+        <h3 id="home-rules-list-title">Rules cheat sheet</h3>
+        <ul id="home-rules-list">
+            <li><strong>Score points</strong> by making the ball pass your opponent's paddle.</li>
+            <li>The first player to <strong>15 points</strong> wins the game.</li>
+            <li>The ball <strong>bounces</strong> off paddles and screen edges.</li>
+            <li>The ball gets the <strong>inertia</strong> of the paddle it hits.</li>
+            <li>The ball <strong>accelerates</strong> slightly after each paddle hit.</li>
+            <li>Players can control their paddles using <strong>keyboard</strong> or <strong>touch</strong> input.</li>
+        </ul>
       </section>
 
+      <!------------------------------------------------------------------------------------------------------------>
+
+      <!--
+        New Game Section
+        This section is a form that allows users to configure player names and start a new game.
+      -->
       <section id="new-game-section">
         <h2 id="new-game-title">New Game</h2>
+        <!-- New Game Form -->
         <form id="new-game-form">
-          <fieldset id="new-game-mode-fieldset">
+          <!-- Game Mode Selection (Currently Commented Out) -->
+          <!-- <fieldset id="new-game-mode-fieldset">
             <legend id="new-game-mode-legend">Select Game Mode:</legend>
             <div id="game-mode-options">
               <label for="single-player">Single Player</label>
@@ -27,43 +83,76 @@
               <label for="two-players">Two Players</label>
               <input type="radio" id="two-players" name="game-mode" value="Two Players" />
             </div>
-          </fieldset>
-          <label for="player1-username">Player 1 Username:</label>
-          <input type="text" id="player1-username" name="player1-username" required />
-          <label for="player2-username">Player 2 Username:</label>
-          <input type="text" id="player2-username" name="player2-username" required />
-          <button id="start-game-button" type="button">Start Game</button>
+          </fieldset> -->
+          
+          <!-- Player 1 Username Input -->
+          <label for="player1-username">Player 1 Username: <span>(Required and maximum 8 characters)</span></label>
+          <input type="text" id="player1-username" name="player1-username" minlength="1" maxlength="8" required />
+          
+          <!-- Player 2 Username Input -->
+          <label for="player2-username">Player 2 Username: <span>(Required and maximum 8 characters)</span></label>
+          <input type="text" id="player2-username" name="player2-username" minlength="1" maxlength="8" required />
+          
+          <!-- Start Game Button -->
+          <button id="start-game-button" type="submit">Start Game</button>
         </form>
       </section>
 
-      <section id="history-section">
+      <!------------------------------------------------------------------------------------------------------------>
 
+      <!--
+        History Section
+        This section displays the list of previously played games with their results.
+      -->
+      <section id="history-section">
+        <h2 id="history-title">Game History</h2>
+        <!-- History List -->
+        <ul id="history-list">
+          <!-- History items will be dynamically added here -->
+        </ul>
+        <!-- Clear History Button -->
+        <button id="history-clear-button" type="button">Clear History</button>
       </section>
 
+      <!------------------------------------------------------------------------------------------------------------>
+
+      <!--
+        Game Section
+        This section contains the canvas element where the Pong game is rendered and played.
+      -->
       <section id="game-section">
+        <!-- Game Canvas -->
         <canvas></canvas>
       </section>
 
+      <!------------------------------------------------------------------------------------------------------------>
+
+      <!--
+        End Game Section
+        This section displays the game results, showing the winner and final scores,
+        with an option to play again with the same players.
+      -->
       <section id="end-game-section">
         <h2 id="end-game-title">Game Over</h2>
+        <!-- Winner Announcement -->
         <p id="end-game-winner-text"></p>
-        <p id="end-game-result">
-          <div id="end-game-player1" class="winner">
-            <span id="end-game-player1-username">Player 1</span>
-            <span>: </span>
-            <span id="end-game-player1-result">15</span>
-          </div>
-          <span id="end-game-scores-separator"> — </span>
-          <div id="end-game-player2" class="loser">
-            <span id="end-game-player2-username">Player 2</span>
-            <span> :</span>
-            <span id="end-game-player2-result">10</span>
-          </div>
-        </p>
+        <!-- Game Result Display -->
+        <div id="end-game-result">
+            <span id="end-game-player1-username" class="winner">Player 1</span>
+            <span id="end-game-score">( 15 : 2 )</span>
+            <span id="end-game-player2-username" class="loser">Player 2</span>
+        </div>
+        <!-- Play Again Button -->
         <button id="end-game-play-again-button" type="button">Play Again</button>
-        <button id="end-game-return-home-button" type="button">Return to home</button>
       </section>
     </main>
     
+    <!-- Footer -->
+    <footer>
+      <!-- Attribution -->
+      <p>Created by Jérémy Martin - SUPSI MAInD Creative Coding Foundations - Assignment 02</p>
+      <!-- GitHub Repository Link -->
+      <a href="https://github.com/jerem-marti/MAInD-Creative_Coding_Foundation-2025/tree/7e6464c87c001b6a569405586f8738c0bec010d9/Assignments/Assignment-02" target="_blank">GitHub Repository</a>
+    </footer>
   </body>
 </html>
