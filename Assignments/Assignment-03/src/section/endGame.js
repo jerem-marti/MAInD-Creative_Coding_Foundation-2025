@@ -59,7 +59,6 @@ const playAgainButton = document.getElementById('end-game-play-again-button');
  */
 const displayEndGame = () => {
     const latestGame = getLatestGame();
-    console.log(latestGame);
     if (!latestGame) {
         console.error("No game history found.");
         winnerTextElement.textContent = "No game data available.";
