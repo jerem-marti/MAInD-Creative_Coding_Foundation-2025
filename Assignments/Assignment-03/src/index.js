@@ -12,12 +12,18 @@ import {displayNewGame} from './section/newGame.js'
 import {displayEndGame} from './section/endGame.js';
 import {displayHistory} from './section/history.js';
 import { initializeHistory } from './utils/historyManager.js';
+import audio from './utils/audio.js';
 
 /**
  * Initialize game history from localStorage.
  * Loads previously saved game results into memory for display in the history section.
  */
 initializeHistory();
+
+/** Initialize button sounds.
+ * Sets up sound effects for button interactions across the application.
+ */
+audio.initializeButtonSounds();
 
 /**
  * Router function that handles URL hash changes and displays the appropriate section.

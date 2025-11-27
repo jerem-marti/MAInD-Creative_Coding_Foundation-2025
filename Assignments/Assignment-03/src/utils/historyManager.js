@@ -50,7 +50,6 @@ const getHistory = () => {
  */
 const getLatestGame = () => {
     const historyArray = getHistory();
-    console.log(historyArray);
     return historyArray.length > 0 ? historyArray[0] : null;
 }
 

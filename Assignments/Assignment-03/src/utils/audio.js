@@ -129,5 +129,23 @@ export default {
      */
     playLoseSound(callback = null) {
         playOnce(atariAudioLose, callback);
+    },
+
+    /**
+     * Initializes button click sounds for all buttons in the document.
+     * Attaches click event listeners to all button elements to play the button sound on click.
+     * 
+     * @method initializeButtonSounds
+     */
+    initializeButtonSounds() {
+        const buttons = new Set([
+            ...document.querySelectorAll('button'),
+            ...document.querySelectorAll('.button')
+        ]);
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                playOnce(atariAudioButton);
+            });
+        });
     }
 };
