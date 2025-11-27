@@ -1,0 +1,96 @@
+@font-face {
+  font-family: "Handjet";
+  src: url(../assets/Handjet-VariableFont_ELGR\,ELSH\,wght.ttf) format("truetype");
+}
+
+html {
+  font-size: var(--font-size);
+}
+
+* {
+  font-family: "Handjet", Arial, sans-serif;
+  color: var(--text-color);
+  line-height: var(--line-height);
+}
+
+h1 {
+  font-size: var(--text-size-h1);
+}
+
+h2 {
+  font-size: var(--text-size-h2);
+  margin-bottom: 0;
+}
+section > :is(h2, h3, h4):first-child {
+  margin-top: 0;
+}
+
+h3 {
+  font-size: var(--text-size-h3);
+  margin-bottom: 0;
+}
+
+h4 {
+  font-size: var(--text-size-h4);
+  margin-bottom: 0;
+}
+
+::placeholder, .placeholder {
+  font-size: var(--text-size-placeholder);
+}
+
+.footnote, footer * {
+  font-size: var(--text-size-footnote);
+  font-weight: var(--font-weight-footnote);
+}
+
+/* Vertically center icons compare to the default baseline */
+.material-icons {
+  vertical-align: middle;
+}
+
+.winner {
+  color: var(--winner-color);
+}
+
+.loser {
+  color: var(--loser-color);
+}
+
+/* --------------------------------------------------------------------------------- */
+/* Media Queries */
+@media (max-width: 1024px) {
+  html {
+    font-size: var(--tablet-font-size);
+  }
+  h1 {
+    font-size: var(--tablet-text-size-h1);
+  }
+  h2 {
+    font-size: var(--tablet-text-size-h2);
+  }
+  h3 {
+    font-size: var(--tablet-text-size-h3);
+  }
+  h4 {
+    font-size: var(--tablet-text-size-h4);
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: var(--mobile-font-size);
+  }
+  h1 {
+    font-size: var(--mobile-text-size-h1);
+  }
+  h2 {
+    font-size: var(--mobile-text-size-h2);
+  }
+  h3 {
+    font-size: var(--mobile-text-size-h3);
+  }
+  h4 {
+    font-size: var(--mobile-text-size-h4);
+  }
+}
