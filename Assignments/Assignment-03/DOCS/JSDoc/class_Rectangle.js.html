@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: class/Rectangle.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: class/Rectangle.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import CanvasElement from './CanvasElement.js';
+
+/**
+ * A rectangular shape that can be drawn on canvas with physics properties.
+ * Uses Verlet integration for physics simulation with velocity, acceleration, and collision detection.
+ * Extends CanvasElement to inherit position management capabilities.
+ * 
+ * @class Rectangle
+ * @extends CanvasElement
+ */
+export default class Rectangle extends CanvasElement {
+    
+    /**
+     * Creates a new Rectangle instance.
+     * 
+     * @constructor
+     * @param {Object} options - Configuration options for the rectangle
+     * @param {number} [options.x=0] - The x-coordinate relative to the reference point
+     * @param {number} [options.y=0] - The y-coordinate relative to the reference point
+     * @param {number} [options.width=100] - The width of the rectangle in pixels
+     * @param {number} [options.height=100] - The height of the rectangle in pixels
+     * @param {number} [options.mass=1] - The mass of the rectangle (used for physics calculations)
+     * @param {Object} [options.speed] - Initial speed configuration
+     * @param {number} [options.speed.velocity=0] - Initial velocity magnitude
+     * @param {number} [options.speed.angle=0] - Initial direction in radians
+     * @param {number|null} [options.speed.max=null] - Maximum velocity (null for no limit)
+     * @param {Object} [options.acceleration] - Acceleration vector
+     * @param {number} [options.acceleration.x=0] - Acceleration in x-direction
+     * @param {number} [options.acceleration.y=0] - Acceleration in y-direction
+     * @param {string} [options.color='white'] - The fill color of the rectangle
+     * @param {Object} [options.posParam] - Position parameters object
+     * @param {string} [options.posParam.relativeTo='top-left'] - Reference point on canvas
+     * @param {Object} options.posParam.canvasSize - Canvas dimensions
+     * @param {number} [options.posParam.canvasSize.width=0] - Canvas width in pixels
+     * @param {number} [options.posParam.canvasSize.height=0] - Canvas height in pixels
+     */
+    constructor({
+        x = 0,
+        y = 0,
+        width = 100,
+        height = 100,
+        mass = 1,
+        speed = {
+            velocity : 0,
+            angle : 0,
+            max : null
+        },
+        acceleration = {
+            x : 0,
+            y : 0
+        },
+        color = 'white',
+        posParam = {
+            relativeTo: 'top-left',
+            canvasSize: {
+                width: 0,
+                height: 0
+            }
+        }
+    } = {}) {
+        super({x, y, posParam});
+        this.lastX = this.x - Math.cos(speed.angle) * speed.velocity;
+        this.lastY = this.y - Math.sin(speed.angle) * speed.velocity;
+        this.width = width;
+        this.height = height;
+        this.mass = mass;
+        this.speed = speed;
+        this.acceleration = acceleration;
+        this.color = color;
+        this.positionRelativeTo = posParam.relativeTo;
+    }
+
+    /**
+     * Calculates the horizontal distance from this rectangle's center to a point.
+     * 
+     * @method distanceXto
+     * @param {Object} point - Point object with x coordinate
+     * @param {number} point.x - The x-coordinate of the point
+     * @returns {number} The horizontal distance (positive if point is to the left)
+     */
+    distanceXto({x}) {
+        return this.x - x;
+    }
+
+    /**
+     * Calculates the vertical distance from this rectangle's center to a point.
+     * 
+     * @method distanceYto
+     * @param {Object} point - Point object with y coordinate
+     * @param {number} point.y - The y-coordinate of the point
+     * @returns {number} The vertical distance (positive if point is above)
+     */
+    distanceYto({y}) {
+        return this.y - y;
+    }
+
+    /**
+     * Checks if a point is inside this rectangle.
+     * 
+     * @method isInside
+     * @param {Object} point - Point object with coordinates
+     * @param {number} point.x - The x-coordinate of the point
+     * @param {number} point.y - The y-coordinate of the point
+     * @returns {boolean} True if the point is inside the rectangle, false otherwise
+     */
+    isInside({x, y}) {
+        const distanceX = Math.abs(this.distanceXto({x}));
+        const distanceY = Math.abs(this.distanceYto({y}));
+        return distanceX &lt;= this.width / 2 &amp;&amp; distanceY &lt;= this.height / 2;
+    }
+
+    /**
+     * Draws the rectangle on the provided canvas context.
+     * 
+     * @method draw
+     * @param {CanvasRenderingContext2D} ctx - The canvas rendering context to draw on
+     */
+    draw(ctx) {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(
+            this.x - this.width / 2,
+            this.y - this.height / 2,
+            this.width,
+            this.height,
+        );
+    }
+
+    /**
+     * Updates the rectangle's position using Verlet integration.
+     * Applies velocity, acceleration, and enforces maximum speed limits.
+     * 
+     * @method move
+     * @param {number} dt - Delta time since last update in seconds
+     */
+    move(dt) {
+        const dx = this.x - this.lastX + this.acceleration.x * dt * dt;
+        const dy = this.y - this.lastY + this.acceleration.y * dt * dt;
+
+        this.lastX = this.x;
+        this.lastY = this.y;
+
+        const currentVelocity = Math.sqrt(dx * dx + dy * dy) / dt;
+
+        if (this.speed.max !== null &amp;&amp; currentVelocity > this.speed.max) {
+            const scalingFactor = (this.speed.max * dt) / Math.sqrt(dx * dx + dy * dy);
+            this.x += dx * scalingFactor;
+            this.y += dy * scalingFactor;
+            return;
+        }
+
+        this.y += dy;
+        this.x += dx;
+    }
+
+    /**
+     * Sets the rectangle's velocity to specific values.
+     * 
+     * @method setSpeed
+     * @param {number} vx - Velocity in x-direction (pixels per frame)
+     * @param {number} vy - Velocity in y-direction (pixels per frame)
+     */
+    setSpeed(vx, vy) {
+        this.lastX = this.x - vx;
+        this.lastY = this.y - vy;
+    }
+
+    /**
+     * Adds velocity to the rectangle's current velocity.
+     * 
+     * @method applySpeed
+     * @param {number} vx - Velocity to add in x-direction (pixels per frame)
+     * @param {number} vy - Velocity to add in y-direction (pixels per frame)
+     */
+    applySpeed(vx, vy) {
+        this.lastX -= vx;
+        this.lastY -= vy;
+    }
+
+    /**
+     * Gets the rectangle's current velocity.
+     * 
+     * @method getSpeed
+     * @returns {Object} Object with x and y velocity components
+     */
+    getSpeed() {
+        return {
+            x: this.x - this.lastX,
+            y: this.y - this.lastY
+        };
+    }
+
+    /**
+     * Sets the rectangle's acceleration to specific values.
+     * 
+     * @method setForce
+     * @param {number} fx - Force in x-direction
+     * @param {number} fy - Force in y-direction
+     * @param {number} [divider=10000] - Divider to scale force values
+     */
+    setForce(fx, fy, divider = 10000) {
+        this.acceleration.x = fx / divider;
+        this.acceleration.y = fy / divider;
+    }
+
+    /**
+     * Adds force to the rectangle's current acceleration.
+     * 
+     * @method applyForce
+     * @param {number} fx - Force to add in x-direction
+     * @param {number} fy - Force to add in y-direction
+     * @param {number} [divider=10000] - Divider to scale force values
+     */
+    applyForce(fx, fy, divider = 10000) {
+        this.acceleration.x += fx / divider;
+        this.acceleration.y += fy / divider;
+    }
+
+    /**
+     * Stops the rectangle's movement by setting velocity and acceleration to zero.
+     * 
+     * @method stop
+     */
+    stop() {
+        this.lastX = this.x;
+        this.lastY = this.y;
+        this.acceleration.x = 0;
+        this.acceleration.y = 0;
+    }
+
+    /**
+     * Handles collision with canvas boundaries.
+     * Keeps the rectangle within the canvas bounds by adjusting position when it hits edges.
+     * 
+     * @method canvasCollision
+     * @param {number} canvasWidth - The width of the canvas in pixels
+     * @param {number} canvasHeight - The height of the canvas in pixels
+     */
+    canvasCollision(canvasWidth, canvasHeight) {
+        // if collision with canvas borders, stop at the border
+        if (this.x - this.width / 2 &lt; 0) {
+            this.x = this.width / 2;
+            this.lastX = this.x;
+        } else if (this.x + this.width / 2 > canvasWidth) {
+            this.x = canvasWidth - this.width / 2;
+            this.lastX = this.x;
+        }
+        if (this.y - this.height / 2 &lt; 0) {
+            this.y = this.height / 2;
+            this.lastY = this.y;
+        } else if (this.y + this.height / 2 > canvasHeight) {
+            this.y = canvasHeight - this.height / 2;
+            this.lastY = this.y;
+        }
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-audio.html">audio</a></li><li><a href="module-clearHistory.html">clearHistory</a></li><li><a href="module-displayEndGame.html">displayEndGame</a></li><li><a href="module-displayGame.html">displayGame</a></li><li><a href="module-displayHistory.html">displayHistory</a></li><li><a href="module-displayNewGame.html">displayNewGame</a></li><li><a href="module-getAvatarUrlEncoded.html">getAvatarUrlEncoded</a></li><li><a href="module-getQueryParamsFromHash.html">getQueryParamsFromHash</a></li><li><a href="module-getScreenOrientation.html">getScreenOrientation</a></li><li><a href="module-setLocalStorageItem.html">setLocalStorageItem</a></li></ul><h3>Classes</h3><ul><li><a href="Avatar.html">Avatar</a></li><li><a href="CanvasElement.html">CanvasElement</a></li><li><a href="Keyboard.html">Keyboard</a></li><li><a href="LineDotted.html">LineDotted</a></li><li><a href="MainLoop.html">MainLoop</a></li><li><a href="Player.html">Player</a></li><li><a href="PongGame.html">PongGame</a></li><li><a href="Rectangle.html">Rectangle</a></li><li><a href="RectangleBouncy.html">RectangleBouncy</a></li><li><a href="Scoreboard.html">Scoreboard</a></li><li><a href="Text.html">Text</a></li><li><a href="Touchscreen.html">Touchscreen</a></li><li><a href="module.exports_module.exports.html">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addGameResultToHistory">addGameResultToHistory</a></li><li><a href="global.html#applyForce">applyForce</a></li><li><a href="global.html#applyMvtToPaddle">applyMvtToPaddle</a></li><li><a href="global.html#applySpeed">applySpeed</a></li><li><a href="global.html#atariAudioButton">atariAudioButton</a></li><li><a href="global.html#atariAudioLose">atariAudioLose</a></li><li><a href="global.html#atariAudioLosePoint">atariAudioLosePoint</a></li><li><a href="global.html#atariAudioPaddleHit">atariAudioPaddleHit</a></li><li><a href="global.html#atariAudioWin">atariAudioWin</a></li><li><a href="global.html#atariAudioWinPoint">atariAudioWinPoint</a></li><li><a href="global.html#avatarApiBaseUrl">avatarApiBaseUrl</a></li><li><a href="global.html#canvasCollision">canvasCollision</a></li><li><a href="global.html#clearAndRefreshCanvas">clearAndRefreshCanvas</a></li><li><a href="global.html#clearHistory">clearHistory</a></li><li><a href="global.html#createBall">createBall</a></li><li><a href="global.html#createPaddle">createPaddle</a></li><li><a href="global.html#destroy">destroy</a></li><li><a href="global.html#displayEndGame">displayEndGame</a></li><li><a href="global.html#displayGame">displayGame</a></li><li><a href="global.html#displayHistory">displayHistory</a></li><li><a href="global.html#displayNewGame">displayNewGame</a></li><li><a href="global.html#displaySection">displaySection</a></li><li><a href="global.html#distanceXto">distanceXto</a></li><li><a href="global.html#distanceYto">distanceYto</a></li><li><a href="global.html#draw">draw</a></li><li><a href="global.html#endGame">endGame</a></li><li><a href="global.html#form">form</a></li><li><a href="global.html#getAvatarUrl">getAvatarUrl</a></li><li><a href="global.html#getAvatarUrlEncoded">getAvatarUrlEncoded</a></li><li><a href="global.html#getCanvasSize">getCanvasSize</a></li><li><a href="global.html#getHistory">getHistory</a></li><li><a href="global.html#getLatestGame">getLatestGame</a></li><li><a href="global.html#getLocalStorageItem">getLocalStorageItem</a></li><li><a href="global.html#getName">getName</a></li><li><a href="global.html#getPaddleKeyboardMvt">getPaddleKeyboardMvt</a></li><li><a href="global.html#getPaddleTouchscreenMvt">getPaddleTouchscreenMvt</a></li><li><a href="global.html#getQueryParamsFromHash">getQueryParamsFromHash</a></li><li><a href="global.html#getScore">getScore</a></li><li><a href="global.html#getScreenOrientation">getScreenOrientation</a></li><li><a href="global.html#getSpeed">getSpeed</a></li><li><a href="global.html#history">history</a></li><li><a href="global.html#historyClearButton">historyClearButton</a></li><li><a href="global.html#historyListElement">historyListElement</a></li><li><a href="global.html#incrementPlayerScore">incrementPlayerScore</a></li><li><a href="global.html#incrementScore">incrementScore</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initializeHistory">initializeHistory</a></li><li><a href="global.html#isDown">isDown</a></li><li><a href="global.html#isInside">isInside</a></li><li><a href="global.html#move">move</a></li><li><a href="global.html#onEnded">onEnded</a></li><li><a href="global.html#playAgainButton">playAgainButton</a></li><li><a href="global.html#playOnce">playOnce</a></li><li><a href="global.html#player1Avatar">player1Avatar</a></li><li><a href="global.html#player1AvatarDefault">player1AvatarDefault</a></li><li><a href="global.html#player1AvatarElement">player1AvatarElement</a></li><li><a href="global.html#player1Input">player1Input</a></li><li><a href="global.html#player1UsernameElement">player1UsernameElement</a></li><li><a href="global.html#player2Avatar">player2Avatar</a></li><li><a href="global.html#player2AvatarDefault">player2AvatarDefault</a></li><li><a href="global.html#player2AvatarElement">player2AvatarElement</a></li><li><a href="global.html#player2Input">player2Input</a></li><li><a href="global.html#player2UsernameElement">player2UsernameElement</a></li><li><a href="global.html#pongGame">pongGame</a></li><li><a href="global.html#rectangleCollision">rectangleCollision</a></li><li><a href="global.html#resetScore">resetScore</a></li><li><a href="global.html#router">router</a></li><li><a href="global.html#saveHistory">saveHistory</a></li><li><a href="global.html#scoreElement">scoreElement</a></li><li><a href="global.html#screenOrientation">screenOrientation</a></li><li><a href="global.html#setForce">setForce</a></li><li><a href="global.html#setLocalStorageItem">setLocalStorageItem</a></li><li><a href="global.html#setPositionRelativeToCanvas">setPositionRelativeToCanvas</a></li><li><a href="global.html#setSpeed">setSpeed</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#updateBallsPosition">updateBallsPosition</a></li><li><a href="global.html#updateElementPosRelativeToCanvas">updateElementPosRelativeToCanvas</a></li><li><a href="global.html#updatePaddlesPosition">updatePaddlesPosition</a></li><li><a href="global.html#updatePositionRelativeToCanvas">updatePositionRelativeToCanvas</a></li><li><a href="global.html#updateScore">updateScore</a></li><li><a href="global.html#updateSideScore">updateSideScore</a></li><li><a href="global.html#winnerTextElement">winnerTextElement</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Nov 27 2025 18:15:34 GMT+0100 (Central European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
