@@ -63,7 +63,7 @@ Classic Pong reimagined for modern browsers. Two players control paddles to keep
 ![Home Screen](DOCS/home.png)
 *Landing page with options to start a new game or view match history*
 
-### Main Menu
+### New Game Form
 ![New Game Form](DOCS/new-game.png)
 *New game screen where players enter their names and are assigned an avatar based on their name before starting a match*
 
